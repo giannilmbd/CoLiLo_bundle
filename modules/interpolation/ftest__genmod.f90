@@ -1,0 +1,11 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Tue Apr 18 18:05:33 2023
+        ! This source file is for reference only and may not completely
+        ! represent the generated interface used by the compiler.
+        MODULE FTEST__genmod
+          INTERFACE 
+            RECURSIVE FUNCTION FTEST(XIN) RESULT(Y)
+              REAL(KIND=8), INTENT(IN) :: XIN(:,:)
+              REAL(KIND=8) ,ALLOCATABLE :: Y(:)
+            END FUNCTION FTEST
+          END INTERFACE 
+        END MODULE FTEST__genmod

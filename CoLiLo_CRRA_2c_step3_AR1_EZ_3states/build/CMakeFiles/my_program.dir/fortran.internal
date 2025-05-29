@@ -1,0 +1,29 @@
+# The fortran modules provided by this target.
+provides
+ bspline_blas_module.mod
+ bspline_defc_module.mod
+ bspline_kinds_module.mod
+ bspline_module.mod
+ bspline_oo_module.mod
+ bspline_sub_module.mod
+ consumption1_autarky_module.mod
+ csv_kinds.mod
+ csv_module.mod
+ csv_parameters.mod
+ csv_utilities.mod
+ discretize.mod
+ find_kappa_mod2.mod
+ globals.mod
+ initialize_and_save_mod_crra_2c.mod
+ interp_mod.mod
+ linespaced_mod.mod
+ markovmoments_mod.mod
+ minpack_module.mod
+ my_i_o.mod
+ my_kinds_mod.mod
+ my_toolbox.mod
+ mymoments.mod
+ optimization_interface_mod.mod
+ pcu_crra_module.mod
+ read_csv_mod.mod
+ write_csv_portable_module.mod

@@ -1,0 +1,13 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "source /opt/intel/oneapi/setvars.sh --force;  make -f Makefile clean;make direct=../../Lucas_versions/CoLiLoGlobal_Collocation_v8_EZ_kappa_as_state -j1;ulimit -s unlimited",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            }
+        }
+    ]
+}

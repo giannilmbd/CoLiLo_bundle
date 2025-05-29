@@ -1,0 +1,9 @@
+module ansi_colors_mod
+    implicit none 
+    character(len=*), parameter :: ANSI_RESET = achar(27)//"[0m"
+    character(len=*), parameter :: ANSI_BACKGROUND = achar(27)//"[46m"
+    character(len=*), parameter :: ANSI_RED = achar(27)//"[31m"
+    character(len=*), parameter :: ANSI_GREEN = achar(27)//"[32m"
+    character(len=*), parameter :: ANSI_BLUE = achar(27)//"[34m"
+    character(len=*), parameter :: ANSI_YELLOW = achar(27)//"[1;33m"
+end module 

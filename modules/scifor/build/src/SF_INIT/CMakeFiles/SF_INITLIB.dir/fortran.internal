@@ -1,0 +1,9 @@
+# The fortran modules provided by this target.
+provides
+ sf_arrays.mod
+ sf_colors.mod
+ sf_constants.mod
+ sf_fonts.mod
+ sf_misc.mod
+ sf_pauli.mod
+ sf_timer.mod

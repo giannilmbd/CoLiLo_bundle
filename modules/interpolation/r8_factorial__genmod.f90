@@ -1,0 +1,11 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Tue Apr 18 20:44:15 2023
+        ! This source file is for reference only and may not completely
+        ! represent the generated interface used by the compiler.
+        MODULE R8_FACTORIAL__genmod
+          INTERFACE 
+            RECURSIVE FUNCTION R8_FACTORIAL(N)
+              INTEGER(KIND=4) :: N
+              REAL(KIND=8) :: R8_FACTORIAL
+            END FUNCTION R8_FACTORIAL
+          END INTERFACE 
+        END MODULE R8_FACTORIAL__genmod

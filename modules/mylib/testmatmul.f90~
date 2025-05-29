@@ -1,0 +1,86 @@
+program testmatmul
+use writeformat
+use matrixmul
+
+implicit none
+integer :: m,n,k
+parameter(m=500,n=500,k=1)
+character*30:: sz
+complex*16 :: Ac(m,n),Bc(n,k), Cc(m,k),Cc2(m,k)
+double precision :: A(m,n),B(n,k),C(m,k),C2(m,k),time0,time1,epsilont(n,1),epsilont2(n,1),epsilont3(n,1)
+integer :: jj
+A=2.
+Ac=2.0
+B=0.
+Bc=cmplx(0.0,0.0)
+epsilont=2.;
+! do jj=1,n
+! B(jj,jj)=2.;
+! Bc(jj,jj)=(2.,0.)
+! enddo
+Bc=1.;
+B=1.;
+call cpu_time(time0)
+ epsilont2(:,:)=mymatmul(A,epsilont,m,n,1)
+write(*,*) size(epsilont2,1),size(epsilont2,2)
+call cpu_time(time1)
+write(*,*) 'time mymatmul in secons' , time1-time0
+call cpu_time(time0)
+ epsilont3=matmul(A,epsilont)
+call cpu_time(time1)
+write(*,*) 'time INTRINSIC matmul in secons' , time1-time0
+sz=wrtfmt(m,10,5)
+write(*,*) 'discrepancy' ,maxval(abs(epsilont2-epsilont3))
+! write(*,sz) Cc
+
+
+
+
+call cpu_time(time0)
+ Cc=mymatmulcc(Ac,Bc,m,n,k)
+call cpu_time(time1)
+! write(*,*) 'Bc'
+! write(*,sz) Bc(1,1) ,Bc(2,2)
+! write(*,*) 'cc'
+! write(*,sz) Cc
+write(*,*) 'time mymatmul complex in secons:' , time1-time0
+call cpu_time(time0)
+ Cc2=matmul(Ac,Bc)
+call cpu_time(time1)
+write(*,*) 'time INTRINSIC matmul complex in secons' , time1-time0
+write(*,*) 'discrepancy', maxval(abs(Cc-Cc2))
+
+
+
+! Ac=cmplx(A)
+call cpu_time(time0)
+ Cc=mymatmulcd(Ac,B,m,n,k)
+call cpu_time(time1)
+! write(*,*) 'Bc'
+! write(*,sz) Bc(1,1) ,Bc(2,2)
+! write(*,*) 'cc'
+! write(*,sz) Cc
+write(*,*) 'time mymatmul complex-real in secons:' , time1-time0
+call cpu_time(time0)
+ Cc2=matmul(Ac,B)
+call cpu_time(time1)
+write(*,*) 'time INTRINSIC matmul complex-real in secons' , time1-time0
+write(*,*) 'discrepancy', maxval(abs(Cc-Cc2))
+
+call cpu_time(time0)
+ Cc=mymatmuldc(A,Bc,m,n,k)
+call cpu_time(time1)
+! write(*,*) 'Bc'
+! write(*,sz) Bc(1,1) ,Bc(2,2)
+! write(*,*) 'cc'
+! write(*,sz) Cc
+write(*,*) 'time mymatmul real-complex in secons:' , time1-time0
+call cpu_time(time0)
+ Cc2=matmul(A,Bc)
+call cpu_time(time1)
+write(*,*) 'time INTRINSIC matmul real-complex in secons' , time1-time0
+
+write(*,*) 'discrepancy', maxval(abs(Cc-Cc2))
+end program
+
+! ifort testmatmul.f90 -I/home/lombardo/gianni/fortran/qz_stuff/mylib matrixmul.f90 writeformat.f90 -L/usr/lib -llapack_LINUX -lblas_LINUX

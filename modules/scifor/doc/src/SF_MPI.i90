@@ -1,0 +1,146 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/scifor/doc/src/SF_MPI.f90"
+MODULE SF_MPI
+  implicit none
+# 6
+
+
+
+  private
+
+
+# 1729
+
+
+
+
+  public :: Init_MPI
+  public :: Finalize_MPI
+  public :: StartMsg_MPI
+!
+  public :: Check_MPI
+  public :: Get_Size_MPI
+  public :: Get_Rank_MPI
+  public :: Get_Master_MPI
+  public :: Get_Last_MPI
+!
+
+  integer :: size
+  integer :: rank
+  integer :: ierr
+
+contains
+
+
+!****************************************
+!              MPI START/STOP
+!****************************************
+  subroutine Init_MPI()
+    return
+  end subroutine Init_MPI
+
+  subroutine Finalize_MPI()
+    return
+  end subroutine Finalize_MPI
+
+  subroutine StartMsg_MPI(comm)
+    integer :: comm
+    return
+  end subroutine StartMsg_MPI
+
+
+
+!****************************************
+!              MPI TOOLS
+!****************************************
+  function Check_MPI() result(bool)
+    logical :: bool
+    bool=.false.
+  end function Check_MPI
+
+  function Get_size_MPI(comm) result(size)
+    integer :: comm
+    integer :: size
+    size=1
+  end function Get_size_MPI
+
+  function Get_rank_MPI(comm) result(rank)
+    integer :: comm
+    integer :: rank
+    rank=0
+  end function Get_rank_MPI
+
+  function Get_master_MPI(comm) result(master)
+    integer :: comm
+    logical :: master
+    master=.true.
+  end function Get_master_MPI
+
+  function Get_last_MPI(comm) result(last)
+    integer :: comm
+    logical :: last
+    last=.true.
+  end function Get_last_MPI
+
+
+
+
+END MODULE SF_MPI
+
+
+
+
+
+
+
+! function Get_Q_MPI(comm,N) result(mpiQ)
+!   integer :: comm
+!   integer :: N
+!   integer :: size
+!   integer :: rank
+!   integer :: mpiQ
+!   size = Get_size_MPI(comm)
+!   mpiQ = N/size
+! end function Get_Q_MPI
+
+! function Get_R_MPI(comm,N) result(mpiR)
+!   integer :: comm
+!   integer :: N
+!   integer :: size
+!   integer :: rank
+!   integer :: mpiR
+!   logical :: last
+!   size = Get_size_MPI(comm)
+!   last = Get_last_MPI(comm)
+!   mpiR=0
+!   if(last)mpiR = mod(N,size)
+! end function Get_R_MPI
+
+! function Get_Chunk_MPI(comm,N) result(Nchunk)
+!   integer :: comm
+!   integer :: N
+!   integer :: Nchunk
+!   Nchunk = Get_Q_MPI(comm,N)+Get_R_MPI(comm,N)
+! end function Get_Chunk_MPI
+
+
+
+! function Get_Q_MPI(comm,N) result(mpiQ)
+!   integer :: comm
+!   integer :: N
+!   integer :: mpiQ
+!   mpiQ = N
+! end function Get_Q_MPI
+
+! function Get_R_MPI(comm,N) result(mpiR)
+!   integer :: comm
+!   integer :: N
+!   integer :: mpiR
+!   mpiR=0
+! end function Get_R_MPI
+
+! function Get_Chunk_MPI(comm,N) result(Nchunk)
+!   integer :: comm
+!   integer :: N
+!   integer :: Nchunk
+!   Nchunk = N
+! end function Get_Chunk_MPI

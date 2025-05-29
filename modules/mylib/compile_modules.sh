@@ -1,0 +1,9 @@
+#! /bin/sh
+# FC='ifort'
+FC='gfortran'
+$FC -c abseig.f90        outerproduct.f90    
+$FC  -c mat_gennorm.f90        vectorfun.f90
+$FC  -c matrixmul.f90     rcondf.f90             writeformat.f90
+$FC  -c mexf90.f90        rnorm.f90          
+$FC  -c mvnrg.f90         solve_lapack_c.f90  
+$FC  -c mydotproduct.f90  solve_lapack.f90    

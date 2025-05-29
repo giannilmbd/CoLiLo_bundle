@@ -1,0 +1,9 @@
+program testrnorm
+
+implicit none
+
+double precision :: g
+double precision, external :: rnorm
+
+g=rnorm()
+end program

@@ -1,0 +1,95 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/simulate_series/simulate_series_mod.f90"
+module simulate_series_mod
+    use my_kinds_mod
+    implicit none
+
+
+contains
+
+    subroutine simulate_series(P, X, T, series, indeces)
+        implicit none
+        real(wp), dimension(:, :), intent(in) :: P
+        real(wp), dimension(:), intent(in) :: X
+        integer, intent(in) :: T
+        real(wp), dimension(T), intent(out):: series
+        integer, dimension(T), intent(out) :: indeces
+        integer :: indx, i, cnt,ngrid,szseed
+        integer, dimension(:), allocatable :: seed
+        real(wp) :: tmpval,Pcumul(size(P,1),size(P,2))
+        ngrid=size(X,1)
+        Pcumul(:,1)=P(:,1)
+! do cnt=1,ngrid
+            do i=2,ngrid
+        Pcumul(:,i)=sum(P(:,1:i),dim=2)
+            enddo
+! enddo
+! set seed
+        CALL random_seed(size=szseed)
+        allocate(seed(szseed))
+        do i=1,szseed 
+            seed(i)=1984+1
+        enddo
+        CALL random_seed(put=seed)
+!TRAIN THE RNG
+        do i=1,100
+            call random_number(tmpval)
+        enddo
+! Choose a random initial state
+! call random_number(tmpval)
+        tmpval=0.5_wp
+        indx=ceiling(tmpval*ngrid)
+        indeces(1)=indx
+        series(1)=X(indx)
+!iterate
+        do i = 2, T
+! next random draw
+            call random_number(tmpval)
+! see where it falls in the distribution P
+            loop_indx: do cnt = 1, ngrid
+                if (tmpval.le.Pcumul(indx,cnt)) then
+! pick the point where the cumulative distribution is >= that point
+                    indx=cnt
+                    indeces(i) = indx
+                    series(i) = X(indx)
+                    exit loop_indx
+                end if
+            end do loop_indx
+
+        end do
+
+    end subroutine simulate_series
+
+    subroutine random_choice(choices, p, size, selected)
+        integer, dimension(:), intent(in) :: choices
+        real(wp), dimension(:), intent(in) :: p
+        integer, intent(in) :: size
+        integer, dimension(:), intent(out) :: selected
+        
+        real(wp), dimension(:), allocatable :: cumsum
+        real(wp) :: total_prob, rand_val
+        integer :: i, j
+        
+! Calculate cumulative probabilities
+        allocate(cumsum(size))
+        cumsum(1) = p(1)
+        do i = 2, size
+            cumsum(i) = cumsum(i-1) + p(i)
+        end do
+        
+! Normalize cumulative probabilities
+        cumsum = cumsum / cumsum(size)
+        
+! Generate random values and select choices
+        do i = 1, size
+            call random_number(rand_val)
+            j = 1
+            do while (cumsum(j) < rand_val .and. j < size)
+                j = j + 1
+            end do
+            selected(i) = choices(j)
+        end do
+        
+        deallocate(cumsum)
+    end subroutine random_choice
+
+end module simulate_series_mod

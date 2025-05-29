@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/my_program",
+            "args": ["v" "2"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}/build",
+            "additionalSOLibSearchPath": "/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "make",
+        }
+    ]
+}

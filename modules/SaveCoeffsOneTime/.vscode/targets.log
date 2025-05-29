@@ -1,0 +1,368 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.3
+# Built for x86_64-redhat-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Sat May  6 14:59:47 2023
+
+# Variables
+
+# environment
+GDK_BACKEND = x11
+# environment
+LC_ALL = C
+# environment
+NO_AT_BRIDGE = 1
+# environment
+GTK_RC_FILES = /etc/gtk/gtkrc:/home/gianni/.gtkrc:/home/gianni/.config/gtkrc
+# environment
+define BASH_FUNC_scl%%
+() {  if [ "$1" = "load" -o "$1" = "unload" ]; then
+ eval "module $@";
+ else
+ /usr/bin/scl "$@";
+ fi
+}
+endef
+# environment
+VSCODE_CRASH_REPORTER_PROCESS_TYPE = extensionHost
+# environment
+VSCODE_CWD = /home/gianni
+# makefile (from 'Makefile', line 31)
+LIBS = -L/usr/lib64 -lm -lc -L/opt/intel/oneapi/mkl/latest/lib/intel64
+# environment
+MODULES_CMD = /usr/share/Modules/libexec/modulecmd.tcl
+# environment
+GDM_LANG = en_US.UTF-8
+# default
+MAKE_COMMAND := make
+# environment
+define BASH_FUNC_which%%
+() {  ( alias;
+ eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@
+}
+endef
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+GDK_DPI_SCALE = 1
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/SaveCoeffsOneTime
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+HOSTNAME = localhost
+# environment
+MAIL = /var/spool/mail/gianni
+# environment
+XDG_DATA_DIRS = /home/gianni/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/
+# environment
+MODULES_RUN_QUARANTINE = LD_LIBRARY_PATH LD_PRELOAD
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_CODE_CACHE_PATH = /home/gianni/.config/Code/CachedData/704ed70d4fd1c6bd6342c436f1ede30d1cff4710
+# environment
+LANG = C
+# environment
+XAUTHORITY = /run/user/1000/xauth_QbyXXu
+# default
+.LOADED := 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# makefile
+MAKEFLAGS = pqrR
+# environment
+PLASMA_USE_QT_SCALING = 1
+# makefile
+CURDIR := /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/SaveCoeffsOneTime
+# environment
+define BASH_FUNC_module%%
+() {  eval `/usr/bin/tclsh /usr/share/Modules/libexec/modulecmd.tcl bash "$@"`;
+ _mlstatus=$?;
+ return $_mlstatus
+}
+endef
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+LESSOPEN = ||/usr/bin/lesspipe.sh %s
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_AUTH_SOCK = /run/user/1000/ssh-agent.socket
+# default
+.SHELLFLAGS := -c
+# environment
+WAYLAND_DISPLAY = wayland-0
+# environment
+HISTSIZE = 1000
+# environment
+XDG_CONFIG_DIRS = /home/gianni/.config/kdedefaults:/etc/xdg:/usr/share/kde-settings/kde-profile/default/xdg
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+XCURSOR_THEME = breeze_cursors
+# environment
+XDG_SESSION_DESKTOP = plasma
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
+# automatic
+@F = $(notdir $@)
+# makefile (from 'Makefile', line 38)
+FCO = -fp-stack-check -check bounds -g -O0 -recursive -r8 -free -traceback -debug extended 
+# environment
+VSCODE_PID = 23478
+# makefile (from 'Makefile', line 30)
+FLIB = $(FLIBA) -axCORE-AVX2 -fp-model precise  
+# environment
+XDG_SESSION_TYPE = wayland
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+GDK_CORE_DEVICE_EVENTS = 1
+# environment
+SESSION_MANAGER = local/unix:@/tmp/.ICE-unix/2817,unix/unix:/tmp/.ICE-unix/2817
+# automatic
+*F = $(notdir $*)
+# environment
+MANPATH = :
+# makefile (from 'Makefile', line 27)
+debug = debug
+# environment
+MODULEPATH = /etc/scl/modulefiles:/usr/share/Modules/modulefiles:/etc/modulefiles:/usr/share/modulefiles
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","osLocale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+define BASH_FUNC_ml%%
+() {  module ml "$@"
+}
+endef
+# default
+MAKE_HOST := x86_64-redhat-linux-gnu
+# makefile
+SHELL = /bin/sh
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 0
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# makefile (from 'Makefile', line 8)
+FC = ifort
+# environment
+PATH = /home/gianni/.local/bin:/home/gianni/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin
+# default
+MAKEFILES := 
+# environment
+MODULESHOME = /usr/share/Modules
+# automatic
+^F = $(notdir $^)
+# makefile (from 'Makefile', line 33)
+LINK_FNL_STATIC_HPC = $(LIBS) -z muldefs -L/opt/intel/oneapi/mkl/latest/lib/intel64/ -Bstatic -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -Wl,--end-group -liomp5 -Bdynamic -Xlinker -rpath -Xlinker /opt/intel/oneapi/mkl/latest/lib/intel64
+# environment
+INVOCATION_ID = 265b2122d01644d68eecac910802de88
+# environment
+USERNAME = gianni
+# environment
+GDK_SCALE = 1
+# automatic
+?F = $(notdir $?)
+# environment
+KDE_APPLICATIONS_AS_SCOPE = 1
+# environment
+XDG_SEAT = seat0
+# environment
+XDG_CURRENT_DESKTOP = KDE
+# environment
+KDEDIRS = /usr
+# automatic
++F = $(notdir $+)
+# environment
+DESKTOP_SESSION = plasma
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = KDE
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+LOGNAME = gianni
+# makefile (from 'Makefile', line 37)
+DIRECTORY = direct
+# environment
+XDG_VTNR = 2
+# makefile
+.DEFAULT_GOAL := save1t.out
+# environment
+SYSTEMD_EXEC_PID = 2829
+# environment
+HISTCONTROL = ignoredups
+# environment
+DISPLAY = :0
+# environment
+USER = gianni
+# default
+MAKE_VERSION := 4.3
+# environment
+KDE_SESSION_UID = 1000
+# environment
+MANAGERPID = 2638
+# environment
+QT_WAYLAND_FORCE_DPI = 96
+# environment
+which_declare = declare -f
+# environment
+DEBUGINFOD_URLS = https://debuginfod.centos.org/ 
+# environment
+XKB_DEFAULT_LAYOUT = us
+# environment
+_ = /usr/bin/make
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+JOURNAL_STREAM = 8:33175
+# environment
+XDG_SESSION_CLASS = user
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+GTK2_RC_FILES = /etc/gtk-2.0/gtkrc:/home/gianni/.gtkrc-2.0:/home/gianni/.gtkrc-2.0-kde4:/home/gianni/.config/gtkrc-2.0
+# environment
+HOME = /home/gianni
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-c93f4281-1.77-main.sock
+# environment
+MATHEMATICA_HOME = /usr/local/Wolfram/Mathematica/13.2
+# environment
+XDG_SESSION_ID = 2
+# environment
+XCURSOR_SIZE = 24
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+QT_AUTO_SCREEN_SCALE_FACTOR = 0
+# environment
+KDE_SESSION_VERSION = 5
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
+# environment
+KDE_FULL_SESSION = true
+# environment
+XDG_MENU_PREFIX = kf5-
+# environment
+GDMSESSION = plasma
+# variable set hash-table stats:
+# Load=123/1024=12%, Rehash=0, Collisions=6/154=4%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 64770, inode 275957): 5 files, no impossibilities.
+
+# 5 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+ 
+
+# No implicit rules.
+
+# Files
+
+save1t.out:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 53):
+	$(FC)  $(FLIB) $(FCO) \
+	../toolbox.f90 \
+	../my_kinds_mod.f90 \
+	../discretize.f90 \
+	../mymoments.f90  \
+	../my_I_O.f90  \
+	../fortran-csv-module/src/csv_kinds.f90 \
+	../fortran-csv-module/src/csv_parameters.f90 \
+	 ../fortran-csv-module/src/csv_utilities.f90 \
+	../fortran-csv-module/src/csv_module.F90 \
+	../read_csv_mod.f90 \
+	../linespaced_mod.f90 \
+	$(direct)/globals.f90 \
+        $(direct)/core_model.f90 \
+	$(direct)/price.f90 \
+	$(direct)/myfunc_update.f90 \
+	save_coeffs_one_time_EZ_k.f90 $(LINK_FNL_STATIC_HPC) -o  save1t.out
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2023-05-06 14:58:42.497225998
+#  File has been updated.
+#  Successfully updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 88):
+	unset OMP_NUM_THREADS
+	rm save1t.out *.mod *.o
+	
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=6/1024=1%, Rehash=0, Collisions=0/16=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 12 / storage = 124 B / avg = 10 B
+# current buf: size = 8162 B / used = 124 B / count = 12 / avg = 10 B
+
+# strcache performance: lookups = 18 / hit rate = 33%
+# hash-table stats:
+# Load=12/8192=0%, Rehash=0, Collisions=0/18=0%
+# Finished Make data base on Sat May  6 14:59:47 2023
+
+ 

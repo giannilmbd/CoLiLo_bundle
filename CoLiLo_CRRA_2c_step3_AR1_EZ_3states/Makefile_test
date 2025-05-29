@@ -1,0 +1,61 @@
+# Compiler settings
+FC = gfortran
+FFLAGS = -O3 -march=native -mtune=native -fopenmp
+LDFLAGS = -fopenmp
+
+# Source directories
+BSLINE_DIR = ../modules/bspline-fortran/src
+SRC_DIR = src
+
+# Target executable
+TARGET = test_autarky
+
+# Default target
+all: $(TARGET)
+
+# Compile bspline modules in correct order
+$(BSLINE_DIR)/bspline_kinds_module.o: $(BSLINE_DIR)/bspline_kinds_module.F90
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BSLINE_DIR)/bspline_defc_module.o: $(BSLINE_DIR)/bspline_defc_module.F90 $(BSLINE_DIR)/bspline_kinds_module.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BSLINE_DIR)/bspline_blas_module.o: $(BSLINE_DIR)/bspline_blas_module.F90 $(BSLINE_DIR)/bspline_kinds_module.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BSLINE_DIR)/bspline_module.o: $(BSLINE_DIR)/bspline_module.f90 $(BSLINE_DIR)/bspline_kinds_module.o $(BSLINE_DIR)/bspline_defc_module.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BSLINE_DIR)/bspline_sub_module.o: $(BSLINE_DIR)/bspline_sub_module.f90 $(BSLINE_DIR)/bspline_module.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BSLINE_DIR)/bspline_oo_module.o: $(BSLINE_DIR)/bspline_oo_module.f90 $(BSLINE_DIR)/bspline_module.o $(BSLINE_DIR)/bspline_sub_module.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+# Compile main program modules
+$(SRC_DIR)/my_kinds_mod.o: $(SRC_DIR)/my_kinds_mod.f90
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(SRC_DIR)/globals.o: $(SRC_DIR)/globals.f90 $(BSLINE_DIR)/bspline_oo_module.o $(SRC_DIR)/my_kinds_mod.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(SRC_DIR)/test_autarky.o: $(SRC_DIR)/test_autarky.f90 $(SRC_DIR)/globals.o
+	$(FC) $(FFLAGS) -c $< -o $@
+
+# Link rule
+$(TARGET): $(BSLINE_DIR)/bspline_kinds_module.o \
+           $(BSLINE_DIR)/bspline_defc_module.o \
+           $(BSLINE_DIR)/bspline_blas_module.o \
+           $(BSLINE_DIR)/bspline_module.o \
+           $(BSLINE_DIR)/bspline_sub_module.o \
+           $(BSLINE_DIR)/bspline_oo_module.o \
+           $(SRC_DIR)/my_kinds_mod.o \
+           $(SRC_DIR)/globals.o \
+           $(SRC_DIR)/test_autarky.o
+	$(FC) $(LDFLAGS) -o $@ $^
+
+# Clean rule
+clean:
+	rm -f $(BSLINE_DIR)/*.o $(SRC_DIR)/*.o $(TARGET)
+
+.PHONY: all clean 

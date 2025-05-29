@@ -1,0 +1,13 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "source /opt/intel/oneapi/setvars.sh --force; make -f Makefile_pdf clean;make -f Makefile_pdf",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            }
+        }
+    ]
+}

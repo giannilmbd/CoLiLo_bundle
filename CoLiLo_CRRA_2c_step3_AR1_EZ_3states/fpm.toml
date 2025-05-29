@@ -1,0 +1,23 @@
+name = "my_project"
+version = "0.1.0"
+license = "MIT"
+author = "Your Name"
+
+[build]
+auto-executables = true
+
+[dependencies]
+nlopt = { path = "/usr/local/lib64" }
+
+[[test]]
+name = "test_suite"
+source-dir = "test"
+
+[compiler]
+openmp = true
+
+[build-flag]
+ifx = ["-O3", "-qopenmp", "-recursive", "-free", "-xhost", "-flto", "-assume", "bscc", "-ipo", "-r8", "-warn", "interfaces", "-Wl,-export-dynamic", "-align", "array64byte", "-qmkl", "-no-prec-div", "-qopt-prefetch=5", "-mcmodel=medium", "-shared-intel"]
+
+[link-flag]
+ifx = ["-axCORE-AVX2", "-fp-model", "precise", "-L/usr/local/lib64", "-lnlopt", "-L/opt/intel/oneapi/mkl/latest/lib/intel64", "-Bstatic", "-Wl,--start-group", "-lmkl_intel_lp64", "-lmkl_intel_thread", "-lmkl_core", "-Wl,--end-group", "-liomp5", "-Bdynamic", "-Wl,-rpath,/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin"]

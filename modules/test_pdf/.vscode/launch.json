@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/pdf.out",
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "additionalSOLibSearchPath": "",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "make", // See label of task.json
+        }
+    ]
+}

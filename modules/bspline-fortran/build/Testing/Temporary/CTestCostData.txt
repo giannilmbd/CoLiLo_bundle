@@ -1,0 +1,7 @@
+bspline_test_2 1 26.7744
+bspline_test 1 4.86512
+stack_size_test_oo 1 1.22526
+test_integrate 1 0.0210175
+test_oo 1 4.82855
+test_regrid 1 0.00279828
+---

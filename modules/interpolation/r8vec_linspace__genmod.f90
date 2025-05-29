@@ -1,0 +1,13 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Tue Apr 18 20:44:15 2023
+        ! This source file is for reference only and may not completely
+        ! represent the generated interface used by the compiler.
+        MODULE R8VEC_LINSPACE__genmod
+          INTERFACE 
+            RECURSIVE SUBROUTINE R8VEC_LINSPACE(N,A_FIRST,A_LAST,A)
+              INTEGER(KIND=4) :: N
+              REAL(KIND=8) :: A_FIRST
+              REAL(KIND=8) :: A_LAST
+              REAL(KIND=8) :: A(N)
+            END SUBROUTINE R8VEC_LINSPACE
+          END INTERFACE 
+        END MODULE R8VEC_LINSPACE__genmod

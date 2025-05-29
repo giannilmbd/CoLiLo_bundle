@@ -1,0 +1,19 @@
+Determining if the Fortran sgemm exists failed with the following output:
+Change Dir: /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/CoLiLo_CRRA_2c_step3_AR1_EZ_3states/test_autarky/build/CMakeFiles/CMakeScratch/TryCompile-lDVyuL
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_36dfb/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_36dfb.dir/build.make CMakeFiles/cmTC_36dfb.dir/build
+gmake[1]: Entering directory '/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/CoLiLo_CRRA_2c_step3_AR1_EZ_3states/test_autarky/build/CMakeFiles/CMakeScratch/TryCompile-lDVyuL'
+Building Fortran object CMakeFiles/cmTC_36dfb.dir/testFortranCompiler.f.o
+/usr/bin/f95    -c /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/CoLiLo_CRRA_2c_step3_AR1_EZ_3states/test_autarky/build/CMakeFiles/CMakeScratch/TryCompile-lDVyuL/testFortranCompiler.f -o CMakeFiles/cmTC_36dfb.dir/testFortranCompiler.f.o
+Linking Fortran executable cmTC_36dfb
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_36dfb.dir/link.txt --verbose=1
+/usr/bin/f95 CMakeFiles/cmTC_36dfb.dir/testFortranCompiler.f.o -o cmTC_36dfb 
+/usr/bin/ld: CMakeFiles/cmTC_36dfb.dir/testFortranCompiler.f.o: in function `MAIN__':
+testFortranCompiler.f:(.text+0xa): undefined reference to `sgemm_'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_36dfb.dir/build.make:99: cmTC_36dfb] Error 1
+gmake[1]: Leaving directory '/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/CoLiLo_CRRA_2c_step3_AR1_EZ_3states/test_autarky/build/CMakeFiles/CMakeScratch/TryCompile-lDVyuL'
+gmake: *** [Makefile:127: cmTC_36dfb/fast] Error 2
+
+
+

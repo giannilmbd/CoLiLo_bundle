@@ -1,0 +1,28 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/mylib/testouter.f90"
+program testouter
+use writeformat
+implicit none
+integer :: m,n,l
+parameter(m=5,n=3)
+double precision :: x(m),y(n),z(m,n)
+integer:: jj
+character*30 :: sz
+l=8;
+do jj=1,5
+x(jj)=dble(jj);
+enddo
+y(1)=1.0;y(2)=2.0;y(3)=3.0;
+! write(*,*) '**********'
+! write(*,*) x
+call outerproduct(x,y,l-n,n,z)
+write(*,*) '**********,z'
+sz=wrtfmt(m,15,8)
+write(*,sz) (z)
+! write(*,*) '**********,z'
+! write(*,*) z
+write(*,*) '**********,x'
+write(*,*) x
+write(*,*) '**********,y'
+write(*,*) y
+ 
+end program

@@ -1,0 +1,116 @@
+program markov_process_mod
+    use my_kinds_mod, only: dp => wp 
+    use csv_module
+    use read_csv_mod 
+    use gnufor2
+    use mymoments
+    use ansi_colors_mod
+    use simulate_series_mod
+    use toolbox,only:simulate_AR
+    ! use toolbox, only: simulate_AR
+
+    implicit none
+    integer, parameter :: T = 10000 ! Length of time series
+    integer, parameter :: N_countries=135
+    integer, parameter :: grid=25
+    real(dp), dimension(grid, grid):: P
+    real(dp), dimension(N_countries,grid*grid) :: allP
+    integer, parameter:: n_cols_ar=46
+    real(dp)  :: ar_stats(N_countries, n_cols_ar-1)
+    real(dp), dimension(grid):: X
+    real(dp), dimension(N_countries,grid):: allX
+    real(dp), dimension(T):: series,xvalues,dummyser
+    character(len=100) :: header_ar(1:n_cols_ar),name_countries(1:N_countries)
+    integer :: indx,  i,case,itexists,ik1,unitnumber1,rc,USA,test(N_countries),indeces(T),cnt
+    type(csv_file) :: f
+    character(len=30),dimension(:),allocatable :: header_new
+    real(wp),dimension(:),allocatable :: ar_stats2
+    character(len=100) ,dimension(:),allocatable :: name_countries2
+    logical :: status_ok
+    integer,dimension(:),allocatable :: itypes
+
+    ! Example probability matrix and states vector
+! 901 format(A5,1x,es20.13,1x,es20.13,1x,es20.13,1x,es20.13,1x,es20.13,1x,es20.13,1x,es20.13,1x,es20.13,1x,es20.13)
+!     inquire (file="../../Rcode/ar_data_pwt.csv", exist=itexists)
+!     if (.not. itexists) error stop "No file ../../Rcode/ar_data_pwt.csv"
+! open(newunit=unitnumber1,action='read',iostat=rc,file="../../Rcode/ar_data_pwt.csv")
+! read (unitnumber1, '(10A)', iostat=rc) header_ar(1:10)
+! do ik1 = 1, N_countries
+!     read (unitnumber1, 901, iostat=rc) name_countries(ik1),ar_stats(ik1, :)
+
+!     if (rc /= 0) exit
+! end do
+
+
+
+
+
+
+! read the file
+call f%read('../../Rcode/ar_data_pwt.csv',header_row=1,status_ok=status_ok)
+
+! get the header and type info
+call f%get_header(header_new,status_ok)
+call f%variable_types(itypes,status_ok)
+
+! get some data
+call f%get(1,name_countries2,status_ok)
+call f%get(2,ar_stats2,status_ok)
+ar_stats(:,1)=ar_stats2
+do cnt = 2,n_cols_ar
+call f%get(cnt,ar_stats2,status_ok)
+ar_stats(:,cnt-1)=ar_stats2 ! NOTE THAT HERE GET -1 SO SIZE WILL BE OK
+enddo
+
+name_countries=name_countries2
+! destroy the file
+call f%destroy()
+
+do ik1=1, N_countries
+    write(*,*) "\033[1;33m"//name_countries(ik1)//"\033[0m \n",ar_stats(ik1,6:9)
+enddo
+
+! close (unitnumber1)
+    call read_csv(filename='../../Calibrate_moments_py/Pmatrices.csv',data=allP)
+    
+    call read_csv(filename='../../Calibrate_moments_py/Xmatrices.csv',data=allX)
+    USA = FINDLOC(name_countries, 'USA', 1)
+    P=transpose(reshape(source=allP(USA,:),shape=shape(P)))
+    X=reshape(source=allX(USA,:),shape=shape(X))
+
+print*,ANSI_RED//'X values'//ANSI_RESET,X
+    ! call simulate_series(P, X, T, series, indeces)
+    call simulate_AR(P,indeces,.true.)
+    series=X(indeces)
+    dummyser=series
+    print*,ANSI_BLUE//'SUM OF SERIES'//ANSI_RESET, sum(series,dim=1)
+    ! call random_choice(X, P, T, indeces)
+    ! call simulate_AR(P,indeces,.true.)
+    ! series=X(indeces)
+
+    !# Print the generated time series
+    do i = 1, T
+        ! print*, series(i)
+        xvalues(i)=real(i,kind=dp)
+    end do
+
+    call plot(xvalues(T-1000:),dummyser(T-1000:),terminal='qt',persist='yes',pause=2.0)
+
+    call plot(xvalues(T-1000:),real(indeces(T-1000:),dp),terminal='qt',persist='yes',pause=2.0)
+    print*,name_countries
+    
+!     test=(/(i,i=1,N_countries)/)
+! where (name_countries.ne.'"USA"') test=0
+! USA = sum(test)
+    write(*,'(A,i)') ANSI_YELLOW//ANSI_BACKGROUND//'POSITION USA'//ANSI_RESET,USA 
+    do i=1,size(P,2)
+    write(*,*) 'sum of columns of Pmatrices', ANSI_BLUE//' row'//ANSI_RESET,i, sum(P(i,:))
+    enddo
+
+    ! compare simulated moments from discretization and from AR
+    write(*,'(A40,1x,4es20.5)') adjustr(ANSI_BACKGROUND//ANSI_YELLOW//' Discretized '//ANSI_RESET), mean(series(T-1000:)), variance(series(T-1000:)), skewness(series(T-1000:)),kurtosis(series(T-1000:))
+    write(*,'(A40,1x,es20.5,1x,es20.5,1x,es20.5,1x,es20.5)') adjustr(ANSI_BACKGROUND//ANSI_YELLOW//' AR '//ANSI_RESET), ar_stats(USA,6:9)
+print*,ANSI_BLUE//'SUM OF SERIES'//ANSI_RESET, sum(series,dim=1)
+
+end program markov_process_mod
+! ifort fortran-csv-module/src/csv_kinds.f90 fortran-csv-module/src/utilities.f90 fortran-csv-module/src/csv_parameters.f90 fortran-csv-module/src/csv_module.F90 read_csv_mod.f90 my_kinds_mod.f90  simulate_series_mod.f90 markov_process_mod.f90 -o test_simul.o

@@ -1,0 +1,1 @@
+/opt/intel/oneapi/compiler/2025.1/bin/ifx -O3 CMakeFiles/test_regrid.dir/test/test_regrid.f90.o -o test_regrid  lib/libbspline-fortran.a 

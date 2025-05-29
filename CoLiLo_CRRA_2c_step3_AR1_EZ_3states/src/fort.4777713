@@ -1,0 +1,5 @@
+set label 1 at screen 0.5, 0.5 'Iteration 1:   1.0000'
+set label 1 at screen 0.5, 0.5 'Iteration 2:   0.5000'
+set label 1 at screen 0.5, 0.5 'Iteration 3:   0.3333'
+set label 1 at screen 0.5, 0.5 'Iteration 4:   0.2500'
+set label 1 at screen 0.5, 0.5 'Iteration 5:   0.2000'

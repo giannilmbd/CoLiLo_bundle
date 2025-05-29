@@ -1,0 +1,4 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "fortran.formatting.path": "/home/gianni/.local/bin/fortls"
+}

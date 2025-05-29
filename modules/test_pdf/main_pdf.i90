@@ -1,0 +1,432 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/test_pdf/main_pdf.f90"
+program main_pdf
+
+    use probability_distribution_mod
+    use omp_lib
+    use :: toolbox, only : fzero
+    use iso_fortran_env, only: output_unit,nwrite => output_unit
+    use simulated_annealing_module, only: simulated_annealing_type, dp, print_vector,print_matrix
+    use minpack_module, only: wp, enorm, lmder1, chkder
+! use iso_fortran_env, only: nwrite => output_unit
+! use ogpf
+
+    implicit none
+    
+    real*8 :: xin(size_x),x(size_x),lb(size_x),tolc(size_x),grad_(size_x),res_l(size_x),fjac(size_x,size_x)
+    integer  :: num_threads,cnt 
+    real*8 :: a3,a4,a5!,me,va,sk,ku
+   integer :: solver,slv
+   integer*8 :: opt
+   real*8 :: minf,res,shr_smpl,pear
+   integer :: ires,nevals,indx_smpl ,n_resets
+   logical :: check
+   integer, parameter :: neps = 4
+  
+   real (dp)   :: ub(size_x), xopt(size_x), c(size_x), vm(size_x), t, eps, rt, fopt, vms
+   integer     :: ns, nt, nfcnev, ier, iseed1, iseed2, i, maxevl, iprint,  &
+                  nacc, nobds, step_mode, iunit
+   logical     :: max
+   integer, parameter :: lwa = 5*size_x+size_x
+   integer :: ipvt(size_x)
+   real*8 :: wa(lwa)
+  integer :: info
+    real*8 :: tol
+    real*8 :: me=0.0, va=0.07**2,  sk=-1.0,  ku=4.0d0
+    real*8, dimension(3) :: fdata
+   
+   type(simulated_annealing_type) :: sa
+include 'nlopt.f'
+
+fdata=[va,sk,ku]
+!initialize
+!  a3>0&&a1>3 a3&&a5>a4^2/(4 a3)
+   
+!  a2=0.5
+!a1/a3>1
+
+
+  x=[0.17560  ,   -0.21056  ,    0.63119E-01]
+  a3=1.92308;
+!  a2=0.5
+a4=-x(2) !-0.21d0 !a4**2-4*a3*a5<0
+a5=a4**2.0/(4.0*a3)+2
+x=[a3,a4,a5]
+!  set input parameters.
+ 
+  max = .false.
+  eps = 1.0e-8_dp
+  rt = .8_dp
+  iseed1 = 1
+  iseed2 = 2
+  ns = 30
+  nt = 200
+  maxevl = 10000000
+  iprint = 0
+  do i = 1, size_x
+    lb(i) = -50_dp
+    ub(i) =  50_dp
+    c(i) =2.0_dp
+  end do
+  nobds = 0 ! JW : no longer used
+!  set input values of the input/output parameters.
+  t = 50.0_dp
+  vm(1:size_x) = 5._dp
+  n_resets = 3 !! number of times to run the main loop (must be >=1)
+! others:
+  step_mode = 1
+  vms = 0.1_dp
+  iunit = output_unit
+  
+  write(output_unit,&
+          '(A,//A,I3,/,A,L5,/A,G9.2,/A,G9.2,/A,G9.2,/A,I4,/A,I4,/A,I4,/A,I10,/A,I4,/A,I4,/A,I4)') &
+          ' simulated annealing example',&
+          '   number of parameters: ', size_x, &
+          '   maximization:         ', max, &
+          '   initial temp:         ', t, &
+          '   rt:                   ', rt, &
+          '   eps:                  ', eps, &
+          '   ns:                   ', ns, &
+          '   nt:                   ', nt, &
+          '   neps:                 ', neps, &
+          '   maxevl:               ', maxevl, &
+          '   iprint:               ', iprint, &
+          '   iseed1:               ', iseed1, &
+          '   iseed2:               ', iseed2
+  
+  call print_vector(output_unit,x, size_x, 'starting values')
+  call print_vector(output_unit,vm, size_x, 'initial step length')
+  call print_vector(output_unit,lb, size_x, 'lower bound')
+  call print_vector(output_unit,ub, size_x, 'upper bound')
+  call print_vector(output_unit,c, size_x, 'c vector')
+  write(output_unit, '(A)') '  ****   end of driver routine output   ****'
+  write(output_unit, '(A)') '  ****   before call to sa.             ****'
+  
+
+ier=1001                     
+! !$omp Parallel do private(fdata,xopt,res,sa,t,vm,vms,nacc,nobds,nfcnev,fopt,ier) default(shared)
+ do cnt=1,size(rngv,1)
+  fdata=[rngv(cnt),sk,ku]
+  if(ier==1001) then
+    xin=x
+  else
+    xin=xopt
+  endif 
+
+  t = 50.0_dp
+  vm(1:size_x) = 5._dp
+  vms = 0.1_dp
+  call sa%initialize(fcn,size_x,lb,ub,c,&
+  max,eps,ns,nt,neps,maxevl,&
+  iprint,iseed1,iseed2,step_mode,vms,iunit)
+  call sa%optimize(xin, rt, t, vm, xopt, fopt, nacc, nfcnev, ier,fdata)
+  
+  write(output_unit, '(A)') '\033[31m  ****   results after sa   ****   \033[0m'
+  call print_vector(output_unit,xopt, size_x, '\033[31m  solution \033[0m')
+  call print_vector(output_unit,vm, size_x, ' \033[31m  final step length \033[0m')
+  write(output_unit,'(/A,G20.13,/A,I10,/A,I10,/A,I10,/A,G20.13,/A,I3/)') &
+        '\033[31m  optimal function value: \033[0m', fopt, &
+        '\033[31m  number of function evaluations:     \033[0m', nfcnev,&
+        '\033[31m  number of accepted evaluations:     \033[0m', nacc, &
+        '\033[31m  number of out of bound evaluations: \033[0m', nobds, &
+        '\033[31m  final temp: \033[0m', t, &
+        '\033[31m   ier: \033 [0m', ier
+
+
+! call calculate_residuals(xopt, fdata, res)
+! write(*,*) '\033[91m initial value \033[0m',res
+        pear=Pearson4(xopt,.1)
+        write(*,*) '\033[91m Pearson @ .1\033[0m',pear
+        aparams(cnt,:)=[a1,a2,xopt,fopt,Pearson4(xopt,.1)]
+ enddo
+! !$omp end parallel do
+
+! write(*,'(/A20,x5,f20.15/)') '\033[31m ALL PARAMS (5 and residual) \033[0m', aparams
+ call print_matrix(size(aparams,1),size(aparams,2),aparams,'\033[31m ALL (5) PARAMS AND RESIDUAL \033[0m')
+pear=Pearson4(aparams(1,3:5),.1)
+print*,'pear',pear
+!###################################################################################################
+
+if(0==1) then ! MUTE NLOPT AND OTHER OPTIMIZATIONS
+
+! Set tol to the square root of the machine precision. Unless high precision
+! solutions are required, this is the recommended setting.
+tol = sqrt(epsilon(1._wp))
+
+call lmder1(fcn_pack, size_x, size_x, x, res_l, fjac, size_x, tol, info, ipvt, wa, lwa)
+
+write(nwrite, '(5x,a,d15.7//,5x,a,16x,i10//,5x,a//(5x,3d15.7),a//(5x,3d15.7))') &
+        'FINAL L2 NORM OF THE RESIDUALS', enorm(size_x, res_l), &
+        'EXIT PARAMETER', info, &
+        'FINAL APPROXIMATE SOLUTION', x, &
+        'RESIDUALS ',res_l
+        
+          call fzero(x, f4fzero, check,parin=fdata)
+          
+        
+          call calculate_residuals(x, fdata, res)
+          write(*,*) '*************************************'
+          write(*,*) '\033[34m FZERO RESIDUAL \033[0m',res
+          write(*,*) '\033[34m FZERO OMPTIMUM \033[0m',x
+          write(*,*) '*************************************'        
+! call optif0 ( size_x, x, fcn_opti, x, res, grad_, ires )
+! write(*,*) '*************************************'
+! write(*,*) '\033[34m Opti RESIDUAL \033[0m',res
+! write(*,*) '\033[34m Opti OMPTIMUM \033[0m',x
+! write(*,*) '*************************************'
+
+! call check_deriv()
+
+
+
+
+!!! END SA
+
+   write(*,*) "--------------------------"
+   write(*,*) "\033[95m CHOOSE SOLVER \033[0m"
+   write(*,*) "--------------------------"
+   write(*,*) "1=\033[95m NLOPT_LN_NELDERMEAD \033[0m"
+   write(*,*) "2=\033[95m NLOPT_GN_CRS2_LM \033[0m"
+   write(*,*) "3=\033[95m NLOPT_LN_SBPLX \033[0m"
+   write(*,*) "4=\033[95m NLOPT_LD_MMA \033[0m"
+   write(*,*) "5=\033[95m NLOPT_GN_DIRECT_L_RAND \033[0m"
+   
+   write(*,*) "6=\033[95m NLOPT_GN_ESCH \033[0m"
+   write(*,*) "7=\033[95m NLOPT_LN_COBYLA \033[0m"
+   write(*,*) "8=\033[95m SLSQP: NLOPT_LD_SLSQP \033[0m"
+   write(*,*) "9=\033[95m AUGLAG: NLOPT_AUGLAG  \033[0m"
+   write(*,*) "10=\033[95m NLOPT_LD_AUGLAG \033[0m"
+   write(*,*) "11=\033[95m ISRES: NLOPT_GN_ISRES \033[0m"
+   
+   write(*,*) "12=\033[95m  LD_LBFGS: Limited-memory BFGS\033[0m"
+   write(*,*) "13=\033[95m LD_TNEWTON_PRECOND_RESTART: Preconditioned truncated Newton with restarts\033[0m"
+   write(*,*) "14=\033[95m  LD_TNEWTON_PRECOND: Preconditioned truncated Newton\033[0m"
+   write(*,*) "15=\033[95m LD_TNEWTON_RESTART: Truncated Newton with restarts\033[0m"
+   write(*,*) "16=\033[95m  LD_TNEWTON: Truncated Newton\033[0m"
+   write(*,*) "17=\033[95m  LD_VAR2: Shifted limited-memory variable-metric\033[0m"
+   write(*,*) "18=\033[95m  LD_VAR1: Shifted limited-memory variable-metric\033[0m"
+
+! Constrained Optimization:
+
+write(*,*) "19=\033[95m LD_SLSQP: Sequential Least-Squares Quadratic Programming (SLSQP)\033[0m"
+
+! Global Optimization:
+
+write(*,*) "20=\033[95m GD_STOGO: Gradient-based global optimization\033[0m"
+write(*,*) "21=\033[95m GD_STOGO_RAND: Randomized gradient-based global optimization\033[0m"
+   write(*,*) "<0 ==>\033[95m  NOT RUNNING SOLVERS \033[0m"
+   write(*,*) "--------------------------"
+   write(*,*) "--------------------------"
+read(*,*) solver
+    select case (solver)
+    case(1)
+      slv=NLOPT_LN_NELDERMEAD
+    case(2)
+      slv=NLOPT_GN_CRS2_LM
+    case(3)
+      slv=NLOPT_LN_SBPLX
+    case(4)
+      slv=NLOPT_LD_MMA
+
+    case(5)
+      slv=NLOPT_GN_DIRECT_L_RAND
+ 
+    case(6)
+      slv=NLOPT_GN_ESCH
+    case(7)
+      slv=NLOPT_LN_COBYLA
+    case(8)
+      slv= NLOPT_LD_SLSQP
+    case(9)
+      slv=NLOPT_AUGLAG
+    case(10)
+      slv= NLOPT_LD_AUGLAG
+    case(11)
+      slv=NLOPT_GN_ISRES
+    case(12)
+      slv=NLOPT_LD_LBFGS
+! LD_LBFGS: Limited-memory BFGS
+      case(13)
+      slv=NLOPT_LD_TNEWTON_PRECOND_RESTART!: Preconditioned truncated Newton with restarts
+    case(14)
+      slv=NLOPT_LD_TNEWTON_PRECOND!: Preconditioned truncated Newton
+    case(15)
+      slv=NLOPT_LD_TNEWTON_RESTART!: Truncated Newton with restarts
+    case(16)
+      slv=NLOPT_LD_TNEWTON!: Truncated Newton
+    case(17)
+      slv=NLOPT_LD_VAR2!: Shifted limited-memory variable-metric
+    case(18)
+      slv=NLOPT_LD_VAR1!: Shifted limited-memory variable-metric
+  
+! Constrained Optimization:
+  
+    case(19)
+      slv=NLOPT_LD_SLSQP!: Sequential Least-Squares Quadratic Programming (SLSQP)
+  
+! Global Optimization:
+  
+    case(20)
+      slv=NLOPT_GD_STOGO!: Gradient-based global optimization
+    case(21)
+      slv=NLOPT_GD_STOGO_RAND!: Randomized gradient-based global optimization
+    case default
+
+      slv=-100
+   end select
+   num_threads= omp_get_max_threads()
+
+
+
+
+  
+
+   check=check_conditions( [a3, a4, a5]) 
+
+  opt=0
+
+
+
+  print*,"NUMBER OF THREADS USED", num_threads-1
+call omp_set_num_threads(num_threads-1)
+
+
+call nlosr(1984)
+
+
+call nlo_create(opt,slv, size_x)
+      call nlo_get_algorithm(ires,opt);
+      print*, "Using algorithm  ==> ", ires
+
+
+! call nlo_get_lower_bounds(ires, opt, lb)
+     
+      lb = -100.0
+      call nlo_set_population(ires, opt, 10)
+      print*, "pop  ==> ", ires
+      tolc=1.0D-3
+      call nlo_add_inequality_mconstraint(ires, opt, size_x, cfun, fdata, tolc)
+      print*, "ineq  ==> ", ires
+      call nlo_set_lower_bounds(ires, opt, lb)
+      print*, "lb  ==> ", ires
+      call nlo_set_upper_bounds(ires, opt, -lb)
+      print*, "ub  ==> ", ires
+      call nlo_set_stopval(ires, opt,  1.0D-12)
+      print*, "stop  ==> ", ires
+      call nlo_set_min_objective(ires, opt, min_resid,fdata)
+      
+      write(*,'(A20,5f20.15)') ' \033[95m flag \033[0m', ires
+      call nlo_set_xtol_abs(ires, opt, 1.0D-12)
+      print*, "xtol abs  ==> ", ires
+      call nlo_set_xtol_rel(ires, opt, 1.D-4)
+      print*, "xtol rel  ==> ", ires
+      call nlo_set_maxeval(ires, opt,-1)
+      print*, "maxeval  ==> ", ires
+      call nlo_set_maxtime(ires, opt, -1)
+      print*, "maxtime  ==> ", ires
+      call nlo_set_ftol_abs(ires,opt, 1.D-12)
+      print*, "ftol  ==> ", ires
+      call nlo_set_initial_step(ires, opt,1.d-2)
+      print*, "step  ==> ", ires
+      call nlo_optimize(ires, opt, x, minf)
+      print*, "optimization  ==> ", ires
+      call nlo_get_numevals(nevals, opt)
+      
+
+      call nlo_destroy(opt);
+
+      write(*,*) '*************************************'
+      write(*,'(A20,E10.3)') ' \033[95m Residual \033[0m', minf
+      write(*,*) ' \033[95m Optimal x \033[0m', x
+      write(*,'(A20,i)') ' \033[95m No evaluations \033[0m \033[0m', nevals
+      if(ires<0) then
+         print*, ' \033[95m FAILED TO FIND OPTIMUM \033[0m'
+      endif
+    endif 
+    write(*,*) '*************************************'
+contains
+
+subroutine fcn(me, theta, h, istat,fdata_)
+!!  this subroutine is from the example in judge et al., the theory and
+!!  practice of econometrics, 2nd ed., pp. 956-7. there are two optima:
+!!  f(.864,1.23) = 16.0817 (the global minumum) and f(2.35,-.319) = 20.9805.
+
+  implicit none
+
+  class(simulated_annealing_type),intent(inout) :: me
+  real (dp), dimension(:), intent(in)  :: theta
+  real (dp), intent(out) :: h
+  integer,intent(out) :: istat
+  real (dp),optional, dimension(:) :: fdata_
+! real (dp) :: va,sk,ku
+! me=0.0
+! va=0.007**2;
+! sk=-1.0
+! ku=4.0d0;
+! fdata=[va,sk,ku]
+istat=0
+  call calculate_residuals(theta, fdata, h)
+
+end subroutine fcn
+subroutine fcn_opti(ns, x, f)
+!!  this subroutine is from the example in judge et al., the theory and
+!!  practice of econometrics, 2nd ed., pp. 956-7. there are two optima:
+!!  f(.864,1.23) = 16.0817 (the global minumum) and f(2.35,-.319) = 20.9805.
+
+  implicit none
+
+  integer,intent(in) :: ns
+  real*8, dimension(ns), intent(in)  :: x
+  real*8, intent(out) :: f
+  
+! real (dp) :: va,sk,ku
+! me=0.0
+! va=0.007**2;
+! sk=-1.0
+! ku=4.0d0;
+! fdata=[va,sk,ku]
+
+  call calculate_residuals(x, fdata, f)
+
+end subroutine fcn_opti
+
+subroutine check_deriv()
+
+  integer :: iflag
+  real(wp) :: xp(size_x), fvecp(size_x), err(size_x)
+
+  call chkder(size_x, size_x, x, res_l, fjac, size_x, xp, fvecp, 1, err)
+  iflag = 1
+  call fcn_pack(size_x, size_x, x, res_l, fjac, size_x, iflag)
+  iflag = 2
+  call fcn_pack(size_x, size_x, x, res_l, fjac, size_x, iflag)
+  iflag = 1
+  call fcn_pack(size_x, size_x, xp, fvecp, fjac, size_x, iflag)
+  call chkder(size_x, size_x, x, res_l, fjac, size_x, xp, fvecp, 2, err)
+
+  write(nwrite, '(a)') 'Derivatives check (1.0 is correct, 0.0 is incorrect):'
+  write(nwrite,'(1p,(5x,3d15.7))') err
+  if (any(abs(err-1.0_wp)>epsilon(1.0_wp))) error stop 'Derivative check failed'
+
+end subroutine check_deriv
+
+subroutine fcn_pack(m, n, x, fvec, fjac, ldfjac, iflag)
+
+  integer, intent(in) :: m
+  integer, intent(in) :: n
+  integer, intent(in) :: ldfjac
+  real(wp), intent(in) :: x(n)
+  real(wp), intent(inout) :: fvec(m)
+  real(wp), intent(inout) :: fjac(ldfjac, n)
+  integer, intent(inout) :: iflag
+
+
+  if (iflag.eq.1) then
+    call calculate_residuals(x, fdata, fvec)
+  else
+    call grad(x,fjac)
+  endif 
+  end subroutine fcn_pack 
+end program main_pdf
+
+
+

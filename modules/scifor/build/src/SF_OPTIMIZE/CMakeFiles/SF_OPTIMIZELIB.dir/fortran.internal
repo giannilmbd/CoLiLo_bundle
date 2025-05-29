@@ -1,0 +1,6 @@
+# The fortran modules provided by this target.
+provides
+ broyden_func_interface.mod
+ broyden_routines.mod
+ cgfit_routines.mod
+ sf_optimize.mod

@@ -1,0 +1,7 @@
+set terminal qt
+set output "date_27-05-2023_time_18:41:56.606"
+unset key
+set grid
+plot "data_file.txt" using 1:2 with linespoints pointtype 10 linecolor rgb "blue" linewidth 1
+pause 0
+q

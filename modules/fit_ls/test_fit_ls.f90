@@ -1,0 +1,35 @@
+program test_fit_ls
+use my_kinds_mod, only:wp
+implicit none
+
+integer, parameter:: n=1500,m=3
+real(kind= wp) :: x(n,m),y(n), std_err(m+1),std_err_res,beta(m+1),tmp,t_test(m+1)
+integer :: cnt1, cnt2
+external fit_ls
+
+
+
+print*,'started'
+
+do cnt1=1,n
+    do cnt2=1,m
+    call random_number(tmp)
+    x(cnt1,cnt2)=tmp
+    end do
+end do
+print*,'X',x
+do cnt1=1,n
+ call random_number(tmp)
+ y(cnt1)=tmp
+end do
+print*,'Y', y
+call fit_ls(n,m,x,y,beta,std_err,std_err_res,t_test)
+
+print*, 'beta',beta
+print*, 'std_err',std_err
+print*,'t-test',t_test
+
+end program 
+
+! ifort -g0 ../my_kinds_mod.f90 fit_ls.f90 test_fit_ls.f90 -llapack -o test_fit_ls.out
+

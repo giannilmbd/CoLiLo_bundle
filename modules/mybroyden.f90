@@ -1,0 +1,137 @@
+module broyden
+    implicit none
+    private
+
+    interface
+    subroutine myf(x,f)
+        implicit none
+        real*8 ,intent(in) :: x(2)
+        real*8,dimension(2) :: f
+    end subroutine 
+    end interface 
+    contains
+subroutine broyden_method(f, x, n, max_iter, tol, error)
+    implicit none
+    ! In this subroutine, f is a function that takes an array x of length n and
+    ! returns an array f of length n.
+    ! The subroutine uses the Broyden method to solve the system of equations f(x) = 0.
+    ! The input arguments are the number of equations n,
+    ! the maximum number of iterations max_iter,
+    ! and the tolerance for convergence tol.
+    ! The output arguments are the final solution x,
+    ! the final function values f,
+    ! and the final error error,
+    ! which is the maximum absolute value of the function values.
+    integer, intent(in) :: n, max_iter
+    real*8, intent(in) :: tol
+    real*8, dimension(n), intent(inout) :: x
+    real*8, dimension(n), intent(out) :: f
+    real*8, intent(out) :: error
+    real*8, dimension(n,n) :: jac, inv_jac, delta
+    real*8, dimension(n) :: s, y, x_new, f_new
+    real*8 :: deltax(n,1), y_new(n,1)
+    integer :: iter, i, j
+  
+
+            ! interface for the function
+!     interface
+!     function funcv(p,parin)
+!         implicit none
+!         real*8*8, intent(in) :: p(:)
+!         real*8*8, intent(in) :: parin(:)
+!         real*8*8 :: funcv(size(p))
+!     end function funcv
+! end interface
+    ! initialize variables
+    jac = 0.0
+    inv_jac = 0.0
+    delta = 0.0
+    y = 0.0
+    y_new = 0.0
+    x_new = 0.0
+    f_new = 0.0
+    error = 0.0
+  
+    ! compute the initial function values
+    call myf(x, f)
+  
+    ! compute the initial Jacobian matrix using finite differences
+    do j = 1, n
+      do i = 1, n
+        if (i == j) then
+          delta(i,j) = 1e-6 * max(1.0, abs(x(i)))
+        else
+          delta(i,j) = 0.0
+        end if
+      end do
+  
+      call myf(x + delta(:,j), y)
+      jac(:,j) = (y - f) / delta(j,j)
+    end do
+  
+    ! compute the initial inverse Jacobian matrix
+    inv_jac = inv(jac,n)
+ 
+    ! perform the Broyden iteration
+    do iter = 1, max_iter
+      call myf(x, f)
+  
+      ! update the solution using the inverse Jacobian matrix
+      s = -matmul(inv_jac, f)
+      x_new = x + s
+  
+      ! compute the new function values
+      call myf(x_new, f_new)
+  
+      ! compute the new y vector
+      y_new = reshape(f_new - f,(/n,1/))
+  
+      ! compute the new inverse Jacobian matrix using the Broyden update formula
+      deltax=reshape(x_new, (/n,1/)) - reshape(x, (/n,1/))
+      inv_jac = inv_jac + matmul(matmul((y_new - matmul(inv_jac, deltax)),transpose(deltax)), &
+                                 inv_jac) / dot_product(deltax(:,1), matmul(inv_jac, deltax(:,1)))
+  
+      ! check for convergence
+      error = maxval(abs(f_new))
+      if (error < tol) exit
+  
+      ! update the solution and function values
+      x = x_new
+      f = f_new
+    end do
+  
+    if (iter == max_iter) error = error + tol
+  end subroutine broyden_method
+
+ 
+  
+  function inv(a1, n) result(inv_a)
+    implicit none
+  
+    integer, intent(in) :: n
+    real*8, dimension(n,n), intent(in) :: a1
+    real*8, dimension(n,n) :: inv_a,a
+    integer :: info, ipiv(n)
+    real*8 :: work(3*n)
+    integer :: lwork
+  
+    ! compute the optimal workspace size
+    a=a1
+    
+    call dgetrf(n, n, a, n, ipiv, info)
+    
+  lwork = -1
+  call dgetri(n, a, n, ipiv, work, lwork, info)
+  lwork = int(work(1))
+    ! invert the matrix using LAPACK
+    call dgetri(n, a, n, ipiv, work, lwork, info)
+    inv_a = a
+  
+    ! check for errors
+    if (info < 0) then
+      write(*,*) "Error: invalid argument to LAPACK routine"
+    else if (info > 0) then
+      write(*,*) "Error: singular matrix"
+    end if
+  end function inv
+end module

@@ -1,0 +1,39 @@
+program main_GSL
+
+    use, intrinsic :: iso_c_binding
+    use gsl_interp
+
+    implicit none
+
+    integer, parameter :: N = 5       ! number of data points
+    integer :: i
+    real(c_double) :: x(N), y(N), x_interp, y_interp
+
+    ! Initialize GSL interpolator
+    type(gsl_interp_type_ptr) :: interp_type
+    type(gsl_interp_accel_ptr) :: accel
+    type(gsl_interp_ptr) :: interp
+
+    interp_type = gsl_interp_polynomial
+    interp = gsl_interp_alloc(interp_type, N)
+    accel = gsl_interp_accel_alloc()
+
+    ! Define the data points
+    x = [0.0d0, 1.0d0, 2.0d0, 3.0d0, 4.0d0]
+    y = [0.0d0, 1.0d0, 4.0d0, 9.0d0, 16.0d0]
+
+    ! ! Initialize the interpolator
+    call gsl_interp_init(interp, x, y, N)
+
+    ! Interpolate at a new point
+    x_interp = 2.5d0
+    y_interp = gsl_interp_eval(interp, x, y, x_interp, accel)
+
+    ! Print the interpolated value
+    print *, "Interpolated value at x = ", x_interp, ": ", y_interp
+
+    ! Free memory
+    call gsl_interp_accel_free(accel)
+    call gsl_interp_free(interp)
+
+end program main_GSL

@@ -1,0 +1,82 @@
+!     Last change:  GL   10 Feb 2004    5:54 pm
+! this looks odd
+subroutine mvnrg(y,M,S,seed,npar)
+
+implicit none
+
+INTEGER ,INTENT(IN) :: seed, npar
+DOUBLE PRECISION, DIMENSION(npar), INTENT(in) :: M
+DOUBLE PRECISION, DIMENSION(npar,npar), INTENT(in) :: S
+DOUBLE PRECISION, DIMENSION(npar,npar) :: SS
+DOUBLE PRECISION, DIMENSION(npar), INTENT(OUT) :: y
+
+DOUBLE PRECISION, DIMENSION(npar,12) :: xx
+DOUBLE PRECISION, DIMENSION(npar) :: x,xn
+INTEGER, DIMENSION(1) :: oldseed, newseed
+DOUBLE PRECISION :: time
+INTEGER :: j,info,k
+
+
+
+CALL CPU_TIME(time)
+! WRITE(*,*) "time" ,time
+SS=S
+call random_seed ! initialize the generator
+call random_seed(size=k) ! k set to size of seed
+!WRITE(*,*) "seed" ,k
+call random_seed(get=oldseed(1:k)) ! get current seed
+newseed=oldseed*INT(10000.0D0*time)
+
+call random_seed(put=newseed(1:k)) ! set user seed
+
+do j=1,12
+x=0
+call random_number(x)
+xx(:,j)=x
+end do
+
+xn=SUM(xx,DIM=2)-6.0D0 !normally distributed variables
+!next compute cholesky of varcov matrix
+call DPOTRF( 'L', npar, SS,npar, INFO )
+!call DPOTRF( UPLO, N, A, LDA, INFO )
+
+!  Arguments
+!  =========
+!
+!  UPLO    (input) CHARACTER*1
+!          = 'U':  Upper triangle of A is stored;
+!          = 'L':  Lower triangle of A is stored.
+!
+!  N       (input) INTEGER
+!          The order of the matrix A.  N >= 0.
+!
+!  A       (input/output) DOUBLE PRECISION array, dimension (LDA,N)
+!          On entry, the symmetric matrix A.  If UPLO = 'U', the leading
+!          N-by-N upper triangular part of A contains the upper
+!          triangular part of the matrix A, and the strictly lower
+!          triangular part of A is not referenced.  If UPLO = 'L', the
+!          leading N-by-N lower triangular part of A contains the lower
+!          triangular part of the matrix A, and the strictly upper
+!          triangular part of A is not referenced.
+!
+!          On exit, if INFO = 0, the factor U or L from the Cholesky
+!          factorization A = U**T*U or A = L*L**T.
+!
+!  LDA     (input) INTEGER
+!          The leading dimension of the array A.  LDA >= max(1,N).
+!
+!  INFO    (output) INTEGER
+!          = 0:  successful exit
+!          < 0:  if INFO = -i, the i-th argument had an illegal value
+!          > 0:  if INFO = i, the leading minor of order i is not
+!                positive definite, and the factorization could not be
+!                completed.
+!
+!  =====================================================================
+!
+!WRITE(*,*) SS
+
+y=MATMUL(SS,xn)
+y=y+M
+
+end subroutine

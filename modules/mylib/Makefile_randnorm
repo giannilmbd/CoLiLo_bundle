@@ -1,0 +1,26 @@
+# include make.inc
+#FLIBS='$RPATH $MLIBS -L/opt/intel/fc/10.0.023/lib  -lm -L/opt/intel/cc/10.0.023/lib -L/home/lombardo/gianni/fortran/qz_stuff/qz4matlab -llapack_LINUX_ifort  -L/usr/lib
+mat_randn.mexglx: mexf90.mod #qzfreal.f90 dggesa.f90 qzfreal_g.f90 -L/home/lombardo/gianni/fortran/mylib -lmylib 
+	#ln -s /home/lombardo/javajre/sunstudio12/bin/sunf90 ./sunf90  -parallel  -O3   -xN -axN 
+	mex  FC='ifort'   FOPTIMFLAGS='-O2 -axP -unroll -funroll-loops -fpp -ipo -no-prec-div -static' LDFLAGS='-pthread -shared  ' LD='ifort'   -o mat_rand randn_gatw.f90  mat_gennorm.f90  ../mylib/writeformat.f90 ../mylib/matrixmul.f90  ../mylib/outerproduct.f90 ../mylib/mydotproduct.f90 ../mylib/abseig.f90 ../mylib/solve_lapack.f90  ../mylib/rcondf.f90 -I../mylib -L../mylib -lrand
+# 	cp loop_learning_f.mexglx /home/lombardo/gianni/symbsolve4_lnx/lq_solution_4lnx/utilities/.
+
+
+mexf90.mod: mexf90.f90
+	ifort -c mexf90.f90 
+clean:
+	rm *.o *.mod *.mexglx
+ 
+
+#Notice that  -msse2 is overwritten by -xN so just use the latter
+
+
+
+#qzfreal.o: qzfreal.f90
+	#$(FCOMP) $(FOPT) -c qzfreal.f90 -o qzfreal.o
+#qzfreal_g.o: qzfreal_g.f90 mexf90.mod
+#	$(FCOMP) $(FOPT) -c qzfreal_g.f90 -o qzfreal_g.o
+#dggesa.o: dggesa.f 
+#	$(FCOMP) $(FOPT) -c dggesa.f -o dggesa.o
+
+

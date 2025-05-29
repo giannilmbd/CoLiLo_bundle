@@ -1,0 +1,35 @@
+function asset_prices_aut() result(ap)
+    use globals
+    use my_kinds_mod
+    implicit none
+
+    real(kind=wp) :: C1, C2, Q, L1, L2, ph, pf
+    real(kind=wp) :: Y1, Y2, ap(2)
+    real(kind=wp) :: Eap1, Eap2
+    integer :: is1_n, is2_n, ik1_n, is_p1, is_p2
+! ap*C**(-1/gamma)=C(+1)**(-1/gamma)*alphha*Y(+1)+C**(-1/gamma)*ap(+1)
+    is1_n = pos_zero1
+    is2_n = pos_zero2
+
+    ik1_n = pos_zeroK
+    Eap1 = 0.0_wp
+    Eap2 = 0.0_wp
+    do is_p1 = 1, NS
+    do is_p2 = 1, NS
+
+        pf = pf_sols_aut( is_p1, is_p2)
+         call bisection_price_autarky(pf, C1, L1, C2, L2, exp(eta1(is_p1)), exp(eta2(is_p2)),ph,Q)
+        Y1 = exp(eta1(is_p1))*L1**(1.0_wp - alphha)
+        Y2 = exp(eta2(is_p2))*L2**(1.0_wp - alphha)
+
+        Eap1 = beta*pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*(C1**(-1.0_wp/gamma)*(alphha*ph*Y1)) + beta*Eap1
+        Eap2 = beta*pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*(C2**(-1.0_wp/gamma)*(alphha*pf/Q*Y2)) + beta*Eap2
+
+    end do
+    end do
+
+        pf = pf_sols_aut( is1_n, is2_n)
+         call bisection_price_autarky(pf, C1, L1, C2, L2, exp(eta1(is1_n)), exp(eta2(is2_n)),ph,Q)
+ap(1)=Eap1*C1**(1.0_wp/gamma)
+ap(2)=Q*Eap2*C2**(1.0_wp/gamma)
+end function

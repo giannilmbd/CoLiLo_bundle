@@ -1,0 +1,483 @@
+!##############################################################################
+! MODULE globals
+! @ Corsetti-Lipinska-Lombardo
+! @ Global parameters/arrays and key functions
+!##############################################################################
+module globals
+   use my_kinds_mod, only: wp
+   use bspline_oo_module
+
+
+   implicit none
+!##############################################################################
+!                           PARAMETERS OF THE MODEL
+!                                   AND
+!                      TUNING ONF THE SOLUTION ALGORITHM
+!##############################################################################
+! SHOULD RECOMPUTE INITIAL CONDITIONS FROM GUESS (TRUE) OR FROM SAVED RESULTS (FALSE)
+!##############################################################################
+   logical, parameter ::     doinitval = .false.
+!##############################################################################
+!##############################################################################
+   logical, parameter :: verbose = .true. ! whether to print each iteration
+!##############################################################################
+
+! ############################################################################
+! ################      HOW TO SOLVE THE EULER EQUATIONS ####################
+   ! solving (fzero) makes sense only if the value function affects allocations, e.g. EZ. Not with CRRA
+   character(len=20), parameter         ::    inner_loop ='update'!'fzero'!'fzero'!  
+   logical :: cubic_spline=.true.
+!##############################################################################
+!##########################  chose whether to use fzero (.true.) or .bisection  #############################
+   logical, parameter :: kappa_fsolve = .false.
+!##############################################################################
+
+!                           ACCURACY OF SOLUTION
+!##############################################################################
+   real(kind=wp), parameter :: sig = 1.0e-6_wp
+   real(kind=wp), parameter :: sig_pf = 1.0e-12_wp
+   real(kind=wp), parameter :: sig_kappa = sig !1.0e-7_wp
+!##############################################################################
+!##############################################################################
+!                           FACTOR OF ASYMMETRY (1+factor_variance)
+!##############################################################################
+   real(kind=wp), parameter :: factor_variance = 4.0_wp
+!##############################################################################
+   ! model parameters
+   real(kind=wp), parameter :: gamma = 0.25_wp ! See Rudebush and Swansson on changing sign with 1/gamma>1
+   real(kind=wp), parameter :: beta = 0.98_wp
+   real(kind=wp), parameter :: lamb = 0.3_wp
+   real(kind=wp), parameter :: varphi = 1.75_wp
+   real(kind=wp) :: pop1, pop2 ! population level
+   real(kind=wp) :: n = 0.5_wp ! this is overwritten in main.f90 based on data
+   real(kind=wp):: nu = 0.5_wp! (1.0_wp - (1.0_wp - n)*lamb) !HOME BIAS OF COUNTRY 1 OVERWRITTEN IN main.f90
+   real(kind=wp) :: nu_b = 0.5_wp! n*lamb ! ditto NOTE THAT nu_s APPIES TO COUNTRY 1 AND 1-nu_s TO COUTNRY 2
+   real(kind=wp), parameter :: price_up = 10.0_wp
+   real(kind=wp) :: price_down = 0.005_wp!(1.0e0_wp-nu)**(1/(trade_elast-1.0e0_wp))+(1.0e-8_wp) ! ditto
+   real(kind=wp), parameter :: alphha = 0.30_wp
+   real(kind=wp), parameter :: chhi = 1.0_wp ! set it to zero if alphha=1
+   real(kind=wp), parameter :: delta = 0.019_wp
+   real(kind=wp), parameter :: trade_elast = 1.5_wp ! ABOVE 100 THE EQUILIBRIUM SWITCHES TO PERFECT SUBSTITUTION pf=ph
+   real(kind=wp), parameter :: theta = 4.0_wp
+   real(kind=wp), parameter :: k0 = 79_wp
+   real(kind=wp)            :: rho = 0.8246_wp ! COUNTRY SPECIFIC
+   real(kind=wp)            :: rho_A1 = 0.0_wp ! to be reset in main.f90
+   real(kind=wp)            :: rho_A2 = 0.0_wp ! to be reset in main.f90
+   ! Number of coutries in sample
+   integer, parameter :: N_countries = 372
+   integer, parameter :: actual_cntry = 1
+   character(len=3), parameter, dimension(actual_cntry) :: subsample = [ "DEU"] !, "TUR", "ESP", "KOR", "CHN", "IND", "USA"] ! from the distro of PCU with RoW
+   integer, dimension(actual_cntry) :: pos_subsample
+   character(len=2), parameter:: region = '_D' ! possible regions _R=RoW; _E=EME; _A=AE; _D=DEU; _U=USA
+   ! variances of stockastic processes
+   real(kind=wp):: p1_ar, p2_ar, p3_ar
+   real(kind=wp), parameter :: sigma_eps = 0.009499_wp**2 ! minimum variance of the shock from data
+   real(kind=wp) :: sigma_eps2
+   real(kind=wp) :: sigma_eps3
+   real(kind=wp):: m1
+   real(kind=wp):: m2
+   real(kind=wp) :: m3
+   integer,parameter :: deg_int=3
+   ! the shock process
+   integer, parameter :: NS = 9 ! must be odd to be symmetric around 0
+   real(kind=wp) :: pi1(NS, NS), eta1(NS), Cpimx1(NS, NS), Cpimx2(NS, NS)
+   real(kind=wp) :: pi2(NS, NS), eta2(NS)
+   integer :: pos_zeroA1,pos_zeroA2,pos_zero1, pos_zero2, pos_zeroK,pos_zeroOm! closest to steady state value
+
+
+! arrays to import markov process
+   character(len=5) :: names_countries(N_countries)
+   integer, parameter:: n_cols_ar = 11 ! COLUMNS OF THE ar_data_pwt.cvs (MUST BE RIGHT: CHECK THE FILE)
+   real(wp), dimension(N_countries, n_cols_ar - 1) :: ar_stats
+   real(wp), dimension(N_countries, NS*NS) :: allP
+   real(wp), dimension(N_countries, NS):: allX
+   integer :: base_cntry !position of base_cntry in name_countries
+
+   ! policy functions FUNCTION OF KAPPA AND TWO EXOGENOUS SHOCKS
+   integer, parameter :: NK1 = 10 !  must be even (start from 0) to encompas 1
+   integer, parameter :: NK2 = 6 ! dim of AR terms 
+   integer, parameter :: NK3 = 6 ! dim of AR terms 
+   integer, parameter :: NK4 = 10 ! dim Omega
+
+   real(wp) :: tx_v1(NK1+1+deg_int,NS,NS), ty_v1(NK2+1+deg_int,NS,NS), tz_v1(NK3+1+deg_int,NS,NS), tq_v1(NK4+1+deg_int,NS,NS),bcoef4_v1(0:NK1,0:NK2,0:NK3,0:NK4,NS,NS)
+   real(wp) :: tx_v2(NK1+1+deg_int,NS,NS), ty_v2(NK2+1+deg_int,NS,NS), tz_v2(NK3+1+deg_int,NS,NS), tq_v2(NK4+1+deg_int,NS,NS),bcoef4_v2(0:NK1,0:NK2,0:NK3,0:NK4,NS,NS)
+
+! Policy functions for all variables under optimal kappa
+   real(kind=wp),dimension(0:NK2,0:NK3,NS,NS) :: C1k,C2k,Y1k,Y2k,pfk,phk,Qk
+   real(kind=wp),dimension(0:NK2,0:NK3,NS,NS) :: C1v_aut, C2v_aut,L1v_aut,L2v_aut,Y1v_aut, Y2v_aut, Qv_aut,pfv_aut,phv_aut
+
+   real(kind=wp) :: kappaS(0:NK1)
+   real(kind=wp), dimension(0:NK1,0:NK2,0:NK3,0:NK4,1:NS, 1:NS) :: s1wide, v1, v2,v1_test , v1_new, v2_new, pf_sols,phv,Ev1, Ev2, Ev1m1, Ev2m1,C1v,Y1v,L1v,Es1,OmegaSplusv
+   ! AUTARKY POLICY FUNCTIONS: SHOULD NOT DEPEND ON KAPPA; But assume so to simplify the code
+   real(kind=wp), dimension(0:NK2,0:NK3,1:NS, 1:NS) :: v1_aut, v1_aut_new, pf_sols_aut,pkh,pkf,pkh_new,pkf_new,pkh_aut,pkf_aut,pkh_aut_new,pkf_aut_new
+   real(kind=wp), dimension(0:NK2,0:NK3,1:NS, 1:NS) :: v2_aut, v2_aut_new
+   real(kind=wp), dimension(0:NK1,0:NK2,0:NK3,0:NK4,1:NS, 1:NS) :: s1, s1_new
+   real(kind=wp), dimension(0:NK1) :: s_kappa
+   real(kind=wp),dimension(0:NK2):: A1
+   real(kind=wp),dimension(0:NK3):: A2
+   real(kind=wp),dimension(0:NK4):: OmegaS
+
+   real(kind=wp), parameter :: kappa_l = 0.8_wp ! Difference between MUC
+   real(kind=wp), parameter :: kappa_u = 1.2_wp ! must consider the resource constraint: C1<(n*A1+(1-n)*A2)/n
+    real(kind=wp), parameter :: Omega_l = 0.90_wp ! Difference between MUC
+    real(kind=wp), parameter :: Omega_u = 1.10_wp ! must consider the resource constraint: C1<(n*A1+(1-n)*A2)/n
+    real(kind=wp), parameter :: A1_l = 0.60_wp, A2_l = A1_l, A1_u = 1.40_wp, A2_u = A1_u ! these will be overwritten in main.f90 based on data
+    real(kind=wp),  dimension(4) ::    LB_all = [kappa_l,A1_l, A2_l,Omega_l], UB_all = [kappa_u, A1_u, A2_u,Omega_u] !must be updated later
+    
+   ! variables to numerically determine policy function
+   real(kind=wp), dimension(1:NK1 + 3,1:NK2 + 3,1:NK3 + 3,1:NK4+3, NS, NS) :: coeff_v1, coeff_v2, coeff_s1
+   real(kind=wp), dimension(1:NK2 + 3,1:NK3 + 3, NS, NS):: coeff_v1_aut, coeff_v2_aut
+   real(kind=wp) :: con_lev_v1, con_lev_v2, con_lev_s1, x_in1, x_in2, x_in3
+   real(kind=wp), dimension(2) :: x_input ! three states and kappa
+   logical :: check
+! COLORS
+   character(len=*), parameter :: ANSI_RESET = achar(27)//"[0m"
+   character(len=*), parameter :: ANSI_BACKGROUND = achar(27)//"[102m" !light green
+   character(len=*), parameter :: ANSI_RED = achar(27)//"[31m"
+   character(len=*), parameter :: ANSI_GREEN = achar(27)//"[32m"
+   character(len=*), parameter :: ANSI_BLUE = achar(27)//"[1;36m" !cycan which reads on black; blue is too dark
+   character(len=*), parameter :: ANSI_YELLOW = achar(27)//"[1;93m"
+   ! variables to communicate with function
+   real(kind=wp) :: k_com, parin(7)
+   integer :: is_com
+   ! ##### PARAMETER VECTOR FOR OPTIMIZATION PARALLELIZED
+   ! real(kind=wp) :: parin0All(7, 500) !# assuming have no more than 500 processors
+
+   
+
+   ! computation of the Jacobian
+   !##############################################################################
+   !# looping on kappas
+   !#################################################################################
+   integer, parameter :: nkappas = 1000
+   real(kind=wp), parameter :: step_kappa = 0.001_wp, kappa_min = 0.5_wp, kappa_2 = 1.5
+   real(kind=wp), dimension(nkappas + 1) :: possible_kappas
+   real(kind=wp), dimension(nkappas) :: resid_A0
+   ! matrices to save results: values and coefficients
+   real(kind=wp), dimension((NK1 + 1)*(NK2 + 1)*(NK3 + 1)*(NK4 + 1)*NS, NS) :: matrix_csv_v1, matrix_csv_v2, matrix_csv_s1, matrix_csv_pf
+   real(kind=wp), dimension((NK2 + 1)*(NK3 + 1)*NS, NS) :: matrix_csv_aut_v1, matrix_csv_aut_v2, matrix_csv_aut_pf
+   real(kind=wp), dimension((NK1 + 3)*(NK2 + 3)*(NK3 + 3)*(NK4 + 1)*NS, NS) :: matrix_coefs_csv_v1, matrix_coefs_csv_v2, matrix_coefs_csv_s1
+   real(kind=wp) :: meanval_v1, meanval_v2
+   real(kind=wp), dimension((NK1 + 1)*(NK2+1)*(NK3+1)*(NK4 + 1)*NS*NS) :: resh_dummy
+
+   !##############################################################################
+   !# END looping on kappas
+   !#################################################################################
+
+   !##############################################################################
+   !# looping on moments parameters
+   !#################################################################################
+   INTEGER, parameter :: n_moms_ = 4000 ! this is max number of runs
+   Integer :: n_moms ! this is the specific number of runs
+   integer, dimension(n_moms_)                     :: opt_kappa_pos
+   real(kind=wp), dimension(n_moms_)   :: opt_kappa, min_kappa_res
+   real(kind=wp), dimension(n_moms_, 4) :: mom_val_1, mom_val_2
+   real(kind=wp), dimension(n_moms_, 8) :: mom_range
+   real(kind=wp), dimension(n_moms_) ::  ToT_moms,ToT_aut_moms,pkh_moms,pkf_moms,pkh_aut_moms,pkf_aut_moms,Qv_aut_moms, Qv_moms
+   real(kind=wp), dimension(n_moms_,2) :: cons_aut_mean
+   real(kind=wp)                      :: mom_val_addition
+   real(kind=wp)  :: inputpar1(9), inputpar2(9)!! parameter for discretization
+   character*1 :: mom2loop
+   !##############################################################################
+   !#  end looping on moments parameters
+   !#################################################################################
+
+   ! initialize random number generators
+   logical, parameter :: tbox_seed = .true., fixed = .true.
+
+   ! numerical parameter
+
+   integer, parameter :: itermax = 5000
+   real(kind=wp), parameter :: smooth = 1.0_wp, smooth_outer_s = smooth, smooth_pf = smooth ! smoothing parameter of FPI update
+   real(kind=wp), parameter :: smooth_alittle = 0.1_wp, smooth_alot = 0.1_wp
+   
+   real(kind=wp) :: smooth_outer = 0.1_wp
+   real(kind=wp),parameter :: smooth_arrow = 1.0_wp
+
+   ! counter variables
+   integer :: it, iter
+
+   ! time path of consumption and capital
+   integer, parameter :: TT = 5000
+   real(kind=wp) :: c1_t(0:TT), c2_t(0:TT),L1_t(0:TT), L2_t(0:TT), eta1_t(0:TT), eta2_t(0:TT), v1_t(0:TT), v2_t(0:TT), Omega_t(0:TT), mu_t(0:TT)
+   real(kind=wp) ::c1_aut_t(0:TT), c2_aut_t(0:TT), L1_aut_t(0:TT), L2_aut_t(0:TT), v1_aut_t(0:TT), v2_aut_t(0:TT)
+   !##############################################################################
+   !# simulation for looping on kappas
+   !#################################################################################
+   integer :: is_t(0:TT), is1_t(0:TT), is2_t(0:TT)
+   integer, dimension(TT) :: totindex1, totindex2
+   real(kind=wp), dimension(TT) :: eta_simul1, eta_simul2
+   real(kind=wp), dimension(TT) :: zindex1, zindex2
+   !##############################################################################
+   !# END simulation for looping on kappas
+   !#################################################################################
+
+   interface
+        subroutine core_model(pf, kappa, OmegaS_in, C, Cs, L, Ls, ph, Q, Y1, res, pred, D, Ds)
+         use my_kinds_mod, only: wp
+         implicit none
+            real(kind=wp), intent(in):: kappa, pf, D, Ds, OmegaS_in
+         real(kind=wp)            :: mu, mus, YW
+         integer           :: cntr
+         real(kind=wp), intent(out) :: C, Cs, L, Ls, ph, Q, pred, res, Y1
+      end subroutine core_model
+   end interface
+
+   ! interface
+   ! function kappafunc(x_input, parin0)
+   !     use my_toolbox, only: spline_eval
+   !     use my_kinds_mod, only: wp
+   !     implicit none
+   !     real(kind=wp), intent(in) :: x_input
+   !     real(kind=wp) :: kappafunc
+   !     real(kind=wp), intent(in) :: parin0(:)
+
+   ! end function
+   ! end interface
+   interface
+      subroutine core_model_autarky(pf, C, Cs, L, Ls, ph, Q, Y1, res, pred, D, Ds)
+         use my_kinds_mod, only: wp
+         implicit none
+         real(kind=wp)            :: pf, D, Ds
+         real(kind=wp), intent(out) :: C, Cs, L, Ls, ph, Q, pred, res, Y1
+      end subroutine core_model_autarky
+   end interface
+
+   ! interface
+   !     pure function pcu_CRRA(W, EC, EL) result(pcu)
+   !         use my_kinds_mod
+   !         implicit none
+
+   !         real(kind=wp), intent(in) :: W, EC, EL
+   !         real(kind=wp) :: pcu
+   !     end function
+   ! end interface
+
+   interface
+      function asset_prices(kappa) result(ap)
+         use my_kinds_mod
+         implicit none
+
+         real(kind=wp) :: C1, C2, Q, L1, L2, ph, pf
+         real(kind=wp) :: Y1, Y2, ap(2)
+         real(kind=wp) :: Eap1, Eap2
+         real(kind=wp), intent(in)::  kappa
+         integer :: is1_n, is2_n, ik1_n, is_p1, is_p2
+      end function
+   end interface
+
+   interface
+      function asset_prices_aut() result(ap)
+         use my_kinds_mod
+         implicit none
+
+         real(kind=wp) :: C1, C2, Q, L1, L2, ph, pf
+         real(kind=wp) :: Y1, Y2, ap(2)
+         real(kind=wp) :: Eap1, Eap2
+         integer :: is1_n, is2_n, ik1_n, is_p1, is_p2
+      end function
+   end interface
+
+   ! interface
+   ! function solve_pf_autarky(x_in, parin01) result(result_)
+
+   !     implicit none
+   ! ! must use kind 8 to be compatible with funcv in toolbox
+   !     real*8, intent(in) :: x_in
+   !     real*8, intent(in) :: parin01(:)
+   !     real*8 :: result_,D,Ds,C,Cs,L,Ls,ph,Q,Y1,pred
+   !     end function solve_pf_autarky
+   ! end interface
+contains
+   subroutine solve_value(nres, size_x, x_input, grad, need_gradient, parin0)
+      implicit none
+      integer, intent(in) :: size_x
+      real(kind=wp), intent(inout) :: x_input(size_x)
+      real(kind=wp) :: res(size_x), temp(size_x),nres, grad(size_x)
+      real(kind=wp), intent(in):: parin0(100)
+      integer::need_gradient
+      temp = x_input
+
+
+      call myfunc_update(size_x, x_input, res, parin0)
+
+      nres=norm2(res,1)
+   end subroutine
+   ! the first order condition
+   function foc2(x_input, parin0)
+      implicit none
+      real(kind=wp), intent(in) :: x_input(:)
+      real(kind=wp) :: foc2(size(x_input, 1)), temp(size(x_input, 1))
+      real(kind=wp), intent(in) :: parin0(:)
+      temp = x_input
+      call myfunc_update(size(x_input, 1), temp, foc2, parin0)
+   end function
+
+
+
+   ! solver for kappa
+   function kappafunc(xkappa, parin0)
+      use my_toolbox, only: spline_eval
+      use my_kinds_mod, only: wp
+      implicit none
+      real(kind=wp), intent(in) :: xkappa
+      real(kind=wp) :: kappafunc
+      real(kind=wp), intent(in) :: parin0(:)
+      kappafunc = spline_eval([xkappa,A1(pos_zeroA1),A2(pos_zeroA2),OmegaS(pos_zeroOm)], coeff_s1(:,:,:,:, pos_zero1, pos_zero2), LB_all, UB_all)
+   end function
+
+   subroutine kappafunc_subr(nres, size_x, xkappa, grad, need_gradient, parin0)
+      use my_toolbox, only: spline_eval
+      use my_kinds_mod, only: wp
+      implicit none
+      integer, intent(in) :: size_x
+      real(kind=wp), intent(inout) :: xkappa(size_x)
+      real(kind=wp) :: results(size(xkappa, 1)), grad(size_x), nres
+      real(kind=wp), intent(in) :: parin0(100)
+      integer:: need_gradient
+      results = spline_eval([xkappa(1),A1(pos_zeroA1),A2(pos_zeroA2),OmegaS(pos_zeroOm)], coeff_s1(:,:,:,:, pos_zero1, pos_zero2), LB_all, UB_all)
+
+      nres = abs(results(1))
+   end subroutine
+! constraint for prices
+   subroutine myconstraint(nres, size_x, x_in, grad, need_gradient, parin0)
+      use my_kinds_mod
+      implicit none
+      integer, intent(in) :: size_x
+      real(kind=wp), intent(in) :: x_in(size_x)
+      real(kind=wp), intent(in) :: parin0(100)
+      real(kind=wp)             ::  pf
+      real(kind=wp) ::  grad(size_x), nres
+      integer ::  need_gradient
+      pf= x_in(1)
+
+      if (need_gradient .ne. 0) then
+         grad(1) =-(((1.0e0_wp-nu)*pf**(-trade_elast)*((1.0e0_wp-(1.0e0_wp-nu)*pf**(1.0e0_wp-trade_elast))/nu)**(-1.0e0_wp+1.0e0_wp/(1.0e0_wp-trade_elast)))/nu)
+      end if
+
+      nres= ((1.0e0_wp - (1.0e0_wp - nu)*pf**(1.0e0_wp - trade_elast))/nu)**(1.0e0_wp/(1.0e0_wp - trade_elast))
+   end subroutine myconstraint
+
+    function func_omega(xin_V1,xin_V2,OmegaS_n,A1_n,A2_n,parin0) result(OmegaSplus)
+        use my_kinds_mod
+        use my_toolbox,only: spline_eval 
+        implicit none
+        real(kind=wp), intent(in) :: xin_V1,xin_V2,OmegaS_n,A1_n,A2_n
+        real(kind=wp), intent(in) :: parin0(:)
+        real(kind=wp) :: v1plusm1,v2plusm1,x_states(4),Omega1,Omega2,OmegaSplus
+        integer :: is_p1,is_p2,ik1_n, ik2_n, ik3_n,ik4_n, is1_n,is2_n
+        is1_n = INT(parin0(1)) ! current shock index
+        is2_n = INT(parin0(2)) ! current shock index
+        ik1_n = INT(parin0(3))
+        ik2_n = INT(parin0(4))
+        ik3_n = INT(parin0(5))
+        ik4_n = INT(parin0(6))
+            ! compute E_{t-1}V_t, which depends on state t-1 and expected innovations    
+    Ev1m1(ik1_n, ik2_n, ik3_n, ik4_n, is1_n,is2_n) = 0e0_wp
+    Ev2m1(ik1_n, ik2_n, ik3_n, ik4_n, is1_n,is2_n) = 0e0_wp
+        x_states= [min(kappaS(ik1_n), UB_all(1)), min(A1_n, UB_all(2)), &
+        min(A2_n, UB_all(3)), min(OmegaS_n, UB_all(4))]
+    do is_p1 = 1, NS
+        do is_p2 = 1, NS
+! lagged expectations
+            v1plusm1 = spline_eval(x_states, &
+                                   coeff_v1(:, :, :,:, is_p1, is_p2), LB_all, UB_all)
+            v2plusm1 = spline_eval(x_states, &
+                                   coeff_v2(:, :, :,:, is_p1, is_p2), LB_all, UB_all)
+            if(v1plusm1<0)print*,ANSI_RED//"Warning: negative value in func_omega v1plusm1"
+
+            Ev1m1(ik1_n, ik2_n, ik3_n, ik4_n,is1_n,is2_n) = Ev1m1(ik1_n, ik2_n, ik3_n, ik4_n, is1_n,is2_n) &
+            + pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*(v1plusm1)**theta ! See Rudebush and Swansson on changing sign with 1/gamma>1
+            Ev2m1(ik1_n, ik2_n, ik3_n, ik4_n, is1_n,is2_n) = Ev2m1(ik1_n, ik2_n, ik3_n, ik4_n, is1_n,is2_n) &
+            + pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*(v2plusm1)**theta
+
+        end do
+    end do
+
+        ! compute allocations at time t
+        Omega1 = beta*(Ev1m1(ik1_n, ik2_n, ik3_n, ik4_n, is1_n,is2_n))**(1.0_wp/theta - 1.0_wp)*(-xin_V1)**(theta - 1.0_wp) ! See RUdebusch and Swansson for change of sign
+
+        Omega2 = beta*(Ev2m1(ik1_n, ik2_n, ik3_n, ik4_n, is1_n,is2_n))**(1.0_wp/theta - 1.0_wp)*(-xin_V2)**(theta - 1.0_wp)
+
+        ! update state variables
+        ! OmegaS (ie get OmegaS_t, which enters consumption shares and thus defines allocations)
+        OmegaSplus = Omega2/Omega1*OmegaS_n
+    end function
+    subroutine solve_pf(nres, size_x, x_in, grad, need_gradient, parin01)
+        use my_kinds_mod
+        implicit none
+        integer, intent(in) :: size_x
+        REAL(kind=wp), INTENT(INOUT), DIMENSION(size_x) :: x_in
+        real(kind=wp), INTENT(IN), DIMENSION(100) :: parin01
+        real(kind=wp)             ::   C1, C2, L1, L2,  ph, Q, Y1, Y2,xin_V1,xin_V2,OmegaS_n,A1_n,A2_n,OmegaSplus,A1plus,A2plus
+        real(kind=wp) :: res(size_x), pred, kappa, grad(size_x), nres,pf
+        integer :: is1_n, is2_n, ik1_n,ik2_n,ik3_n, ik4_n, need_gradient
+
+        is1_n = INT(parin01(1)) ! current shock index
+        is2_n = INT(parin01(2)) ! current shock index
+        ik1_n = INT(parin01(3))
+        ik2_n = INT(parin01(4))
+        ik3_n = INT(parin01(5))
+        ik4_n = INT(parin01(6))
+
+        xin_V1=parin01(8)
+        xin_V2=parin01(9)
+        A1_n=parin01(10)
+        A2_n=parin01(11)
+        OmegaS_n = OmegaS(ik4_n)
+
+        kappa = kappaS(ik1_n)
+
+        OmegaSplus=func_omega(xin_V1,xin_V2,OmegaS_n,A1_n,A2_n,parin01(1:7))
+! OmegaSplus=1.0_wp ! for debugging
+
+        A1plus = A1_n**rho_A1*exp(eta1(is1_n))
+        A2plus = A2_n**rho_A2*exp(eta2(is2_n))
+
+        pf=x_in(1)
+         call core_model(pf=pf, kappa=kappa, OmegaS_in=OmegaSplus, C=C1, Cs=C2, L=L1, Ls=L2, &
+         ph=ph, Q=Q, Y1=Y1, res=nres, pred=pred, D=A1plus, Ds=A2plus)
+        
+    end subroutine
+
+
+
+    subroutine solve_pf_minpack(size_x, x_in, res,iflag, parin01)
+        use my_kinds_mod
+        implicit none
+        integer, intent(in) :: size_x
+        real(kind=wp), intent(in) :: x_in(size_x)
+        real(kind=wp),intent(in),optional,dimension(:) :: parin01
+        integer,intent(inout) :: iflag
+        real(kind=wp) , intent(out):: res(size_x)
+        real(kind=wp)             ::   C1, C2, L1, L2,  ph, Q, Y1, Y2,xin_V1,xin_V2,OmegaS_n,A1_n,A2_n,OmegaSplus,A1plus,A2plus
+        real(kind=wp) :: pred, kappa, grad(size_x), nres,pf
+        integer :: is1_n, is2_n, ik1_n,ik2_n,ik3_n, ik4_n, need_gradient
+
+        is1_n = INT(parin01(1)) ! current shock index
+        is2_n = INT(parin01(2)) ! current shock index
+        ik1_n = INT(parin01(3))
+        ik2_n = INT(parin01(4))
+        ik3_n = INT(parin01(5))
+        ik4_n = INT(parin01(6))
+
+        xin_V1=parin01(8)
+        xin_V2=parin01(9)
+        A1_n=parin01(10)
+        A2_n=parin01(11)
+        
+        OmegaS_n = OmegaS(ik4_n)
+
+        kappa = kappaS(ik1_n)
+
+        OmegaSplus=func_omega(xin_V1,xin_V2,OmegaS_n,A1_n,A2_n,parin01(1:7))
+        ! OmegaSplus=1.0_wp ! for debugging
+        A1plus = A1_n**rho_A1*exp(eta1(is1_n))
+        A2plus = A2_n**rho_A2*exp(eta2(is2_n))
+        pf=x_in(1)
+
+         call core_model(pf=pf, kappa=kappa, OmegaS_in=OmegaSplus, C=C1, Cs=C2, L=L1, Ls=L2, &
+         ph=ph, Q=Q, Y1=Y1, res=nres, pred=pred, D=A1plus, Ds=A2plus)
+        res(1)=nres
+    end subroutine
+end module

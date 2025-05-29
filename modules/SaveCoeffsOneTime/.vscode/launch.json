@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/save1t.out",
+            "args": ["v", "1", "../../Lucas_versions/CoLiLoGlobal_Collocation_v8_EZ_kappa_as_state"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "additionalSOLibSearchPath": "/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "make",
+        }
+    ]
+} 

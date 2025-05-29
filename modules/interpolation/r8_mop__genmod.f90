@@ -1,0 +1,11 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Tue Apr 18 20:44:15 2023
+        ! This source file is for reference only and may not completely
+        ! represent the generated interface used by the compiler.
+        MODULE R8_MOP__genmod
+          INTERFACE 
+            RECURSIVE FUNCTION R8_MOP(I)
+              INTEGER(KIND=4) :: I
+              REAL(KIND=8) :: R8_MOP
+            END FUNCTION R8_MOP
+          END INTERFACE 
+        END MODULE R8_MOP__genmod

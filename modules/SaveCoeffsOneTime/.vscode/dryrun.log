@@ -1,0 +1,21 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/SaveCoeffsOneTime'
+ifort   -axCORE-AVX2 -fp-model precise   -fp-stack-check -check bounds -g -O0 -recursive -r8 -free -traceback -debug extended  \
+../toolbox.f90 \
+../my_kinds_mod.f90 \
+../discretize.f90 \
+../mymoments.f90  \
+../my_I_O.f90  \
+../fortran-csv-module/src/csv_kinds.f90 \
+../fortran-csv-module/src/csv_parameters.f90 \
+ ../fortran-csv-module/src/csv_utilities.f90 \
+../fortran-csv-module/src/csv_module.F90 \
+../read_csv_mod.f90 \
+../linespaced_mod.f90 \
+/globals.f90 \
+        /core_model.f90 \
+/price.f90 \
+/myfunc_update.f90 \
+save_coeffs_one_time_EZ_k.f90 -L/usr/lib64 -lm -lc -L/opt/intel/oneapi/mkl/latest/lib/intel64 -z muldefs -L/opt/intel/oneapi/mkl/latest/lib/intel64/ -Bstatic -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -Wl,--end-group -liomp5 -Bdynamic -Xlinker -rpath -Xlinker /opt/intel/oneapi/mkl/latest/lib/intel64 -o  save1t.out
+make: Leaving directory '/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/SaveCoeffsOneTime'
+ 

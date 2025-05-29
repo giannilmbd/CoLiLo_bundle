@@ -1,0 +1,122 @@
+module initialize_and_save_mod_CRRA
+    use my_kinds_mod, only: wp
+    use globals
+    implicit none
+    contains
+
+
+
+    subroutine initialvalues_CRRA()
+        use omp_lib
+        use my_I_O
+        use globals
+        use read_csv_mod
+        implicit none
+    
+        integer :: ik1,is1,is2
+        logical :: file_exists
+        character(len=100) :: filename
+        real(kind=wp) :: C1,C2,mu,Yworld,pf,L1,L2,ph,Q,res,pred,Y1
+        pf=1.0_wp
+        if (doinitval) then
+            !!!$omp PARALLEL DO  private(C1,C2,L1,L2,ph,pf) default(shared) collapse(3)
+    
+            do ik1 = 0, NK1
+
+                        do is1 = 1, NS
+                            do is2 = 1, NS
+                                call core_model(pf=pf, kappa=kappaS(ik1),  C=C1, Cs=C2, L=L1, Ls=L2, &
+                                ph=ph, Q=Q, Y1=Y1, res=res, pred=pred, D=exp(eta1(is1)), Ds=exp(eta2(is2)))
+                                ! future X state
+                                v1(ik1, is1, is2) = C1**(1e0_wp - 1e0_wp/gamma)/(1e0_wp - 1e0_wp/gamma)-chhi*L1**(1.0e0_wp+varphi)/(1.0e0_wp+varphi)  ! check sidn Rud&Swans
+                                v2(ik1, is1, is2) = C2**(1e0_wp - 1e0_wp/gamma)/(1e0_wp - 1e0_wp/gamma)-chhi*L2**(1.0e0_wp+varphi)/(1.0e0_wp+varphi)
+                                s1(ik1,  is1, is2) = (C1**(-1e0_wp/gamma)*(C1 - ph*Y1))/(1.0_wp-beta)
+                            end do
+
+                end do
+            end do
+    !!!$omp END PARALLEL DO
+    
+        else
+            filename=trim(StrNumStr(str1='v1_data_'//mom2loop,cnt=1,str2='.csv'))
+            inquire(file=trim(filename), exist=file_exists) 
+            if(file_exists.neqv..true.) then
+            write(*,*) ANSI_RED//'FILE DOES NOT EXIST'//ANSI_RESET, filename
+            stop
+            endif
+            call read_csv(filename=trim(filename),data=matrix_csv_1)
+            call read_csv(filename=trim(StrNumStr(str1='v2_data_'//mom2loop,cnt=1,str2='.csv')),data=matrix_csv_2)
+            call read_csv(filename=trim(StrNumStr(str1='s1_data_'//mom2loop,cnt=1,str2='.csv')),data=matrix_csv_3)
+
+            v1 = RESHAPE(source=(matrix_csv_1), shape=shape(v1))
+            v2 = RESHAPE(source=(matrix_csv_2), shape=shape(v2))
+            s1= RESHAPE(source=(matrix_csv_3), shape=shape(s1))
+        end if
+    ! print*,size(v1,1)
+        ! tmp_plot2(:, 2) = RESHAPE(tmp_plot(:, :, :, :, :, 2), (/((1 + NK1)*(1 + NK2)*(1 + NK3)*NS**2)/))
+        ! tmp_plot2(:, 1) = RESHAPE(tmp_plot(:, :, :, :, :, 1), (/((1 + NK1)*(1 + NK2)*(1 + NK3)*NS**2)/))
+        ! call plot(tmp_plot2(:, 2), tmp_plot2(:, 1), noline=.true.)
+        ! call execplot(xlabel='State', ylabel='C1', title='CONSUMPTION DISTRIBUTION (steady state)')
+        v1_aut = v1(pos_zeroK,:,:); 
+        v2_aut = v2(pos_zeroK,:,:);
+        
+        
+    end subroutine initialvalues_CRRA
+
+    subroutine save_results_CRRA(cnt_mom)
+        use globals
+        use my_I_O
+        use read_csv_mod
+        implicit none
+    
+        integer, intent(in) :: cnt_mom
+        integer :: ik1,unitnumber1,unitnumber2,unitnumber3,nlines
+        ! 101 format(1x, *(g0, ", "))
+    ! SAVE THE SOLUTION TO FILE values and coefficients
+        matrix_csv_1 = RESHAPE(source=v1, &
+                               shape=shape(matrix_csv_1))
+        matrix_csv_2 = RESHAPE(source=v2, &
+                               shape=shape(matrix_csv_2))
+        matrix_csv_3 = RESHAPE(source=s1, &
+                               shape=shape(matrix_csv_3))
+    
+         call write_csv(filename=trim(StrNumStr(str1='v1_data_'//mom2loop, cnt=cnt_mom,str2= '.csv')),data=matrix_csv_1)
+         call write_csv(filename=trim(StrNumStr(str1='v2_data_'//mom2loop, cnt=cnt_mom,str2= '.csv')),data=matrix_csv_2)
+         call write_csv(filename=trim(StrNumStr(str1='s1_data_'//mom2loop, cnt=cnt_mom, str2= '.csv')),data=matrix_csv_3)
+
+         ! SAVE AUTARKY
+         matrix_csv_aut_1 = RESHAPE(source=v1_aut, &
+         shape=shape(matrix_csv_aut_1))
+         matrix_csv_aut_1 = RESHAPE(source=v2_aut, &
+         shape=shape(matrix_csv_aut_2))
+
+
+call write_csv(filename=trim(StrNumStr(str1='v1_aut_data_'//mom2loop, cnt=cnt_mom, str2= '.csv')),data=matrix_csv_aut_1)
+call write_csv(filename=trim(StrNumStr(str1='v2_aut_data_'//mom2loop, cnt=cnt_mom, str2= '.csv')),data=matrix_csv_aut_2)
+         
+        ! save coefficients
+    matrix_coefs_csv_1 = RESHAPE(source=coeff_v1, &
+        shape=shape(matrix_coefs_csv_1))
+    matrix_coefs_csv_2 = RESHAPE(source=coeff_v2, &
+        shape=shape(matrix_coefs_csv_2))
+    matrix_coefs_csv_3 = RESHAPE(source=coeff_s1, &
+        shape=shape(matrix_coefs_csv_3))
+        call write_csv(filename=trim(StrNumStr(str1='coef_v1_data_'//mom2loop, cnt=cnt_mom, str2= '.csv')),data=matrix_coefs_csv_1)
+        call write_csv(filename=trim(StrNumStr(str1='coef_v2_data_'//mom2loop, cnt=cnt_mom, str2= '.csv')),data=matrix_coefs_csv_2)
+        call write_csv(filename=trim(StrNumStr(str1='coef_s1_data_'//mom2loop, cnt=cnt_mom, str2= '.csv')),data=matrix_coefs_csv_3)
+
+
+    ! TEST IF SAVING LOSES DATA
+    if(verbose)then !mute if not debugging
+        nlines=size(matrix_csv_1,1)
+        call read_csv(filename=StrNumStr(str1='v1_data_'//mom2loop, cnt=cnt_mom, str2='.csv'), data=matrix_csv_1, nlines=nlines)
+    
+        v1_test = RESHAPE(source=(matrix_csv_1), shape=shape(v1_test))
+        meanval_v1=maxval(abs(v1_test-v1))
+        print*,'\033[34m MAX DISCREPANCY RELATIVE TO SAVED DATA \033[0m', meanval_v1
+
+    endif 
+    
+    end subroutine
+    
+end module

@@ -1,0 +1,4 @@
+# The fortran modules provided by this target.
+provides
+ interpolate_nr.mod
+ sf_interpolate.mod

@@ -1,0 +1,125 @@
+module mypolynte_mod
+    
+    implicit none
+    contains
+
+subroutine myinterpol(Oinv)
+use globals_4test_mod
+    implicit none
+    integer :: i,j,k,szB,r
+    real*8 :: ress(0:1)
+    real*8 :: res_p(0:iters_p), res_k(0:iters_p),res(0:iters,0:1),Oinv(0:num_coeffs-1,0:ngrid_-1),xplot(0:iters-1), kappa,ress_prnt
+ 
+type(params) param
+! generage the interpolation coefficients
+    if(cheb) then
+
+! using chebyshev polynomials
+        call t_polynomial( ngrid_+1, ord, exp(param%D),B1)! m length, n order (minus constant), x points, v output
+        call t_polynomial(ngrid_+1, ord,  exp(param%Ds),B2)! m length, n order, x points, v output
+     else
+      ! or standard polynomials
+        call m_polynomial(exp(param%D),B1)
+        call m_polynomial(exp(param%Ds),B2)
+     endif
+
+     print*,B1
+     print*,B2
+  
+     call kron_d_cols(B1,B2,ngrid_+1,ord,ord,param%OnGrid);
+
+     print*,'---------------------------------'
+       print*,param%OnGrid
+       print*,'---------------------------------'
+  
+  ! steady state SHOULD DO CHEBYSHEV TOO?
+     call t_polynomial(ngrid_+1, ord,  (D_stst),B1)! m length, n order, x points, v output
+     call t_polynomial(ngrid_+1, ord,  (D_stst),B2)! m length, n order, x points, v output
+     call kron_d_cols(B1,B2,ngrid_+1,ord,ord,Ones);
+  
+
+  ! integration of the values (used in precomputation of means)
+     Do i=0,ngrid_-1
+        param%Intg(i,:)=sum(param%OnGrid,1)/(ngrid_)
+     enddo
+  
+  
+     A=param%OnGrid
+     szB=size(param%Intg,2);
+  
+     ress=-1.0d0
+     res=-1.d0
+     res_p=-1.d0
+  ! core business
+  
+  ! evaluate the polynomial at the grid points
+     select case (whichinv)
+      case (1)
+        eye=0.0d0
+        do i=0,num_coeffs-1
+           eye(i,i)=1.0d0
+        end do
+        call solve_lapack(matmul(transpose(param%OnGrid),param%OnGrid),num_coeffs,num_coeffs,eye,num_coeffs,Xout)
+  
+        param%LS=matmul(Xout,transpose(param%OnGrid))
+        Oinv = param%LS;
+        ! mesg='LS'
+      case (2)! % ridge regression (otherwise svd based)
+        Oinv=param%Oridge;
+        ! mesg='Ridge'
+      case default
+        A=param%OnGrid
+        szB=size(param%Intg,2);
+  
+  
+  
+  ! call SVD(A,Usvd,SS,Ssvd,Vsvdt )
+        call SVD_gl(A,Usvd,Ssvd,Vsvd,ngrid_,num_coeffs )
+        SS=0.0d0
+        r=0
+        do i=0,num_coeffs-1
+           if(abs(SSvd(i))>1.0d-7) then
+              r=r+1;
+           end if
+           SS(i,i)=1.0d0/Ssvd(i)
+        end do
+  
+        allocate(SSr(0:r-1,0:r-1),Vr(0:num_coeffs-1,0:r-1),Ur(0:ngrid_-1,0:r-1))
+        SSr=0.0d0
+        do i=0,r-1
+           SSr(i,i)=1/SSvd(i)
+           Vr(:,i)=Vsvd(:,i)
+           Ur(:,i)=Usvd(:,i)
+        end do
+        ! param%Oinv=matmul(Vsvd,matmul(SS,transpose(Usvd)))
+        param%Oinv=matmul(Vr,matmul(SSr,transpose(Ur)))
+        Oinv=param%Oinv;
+        ! mesg='SVD'
+        deallocate(SSr,Vr,Ur)
+     end select
+
+    end subroutine
+end module mypolynte_mod
+
+!Me: The code above generates a polynomial interpolation and the update of the polynomial coefficients by regression
+!Me: Can you parse it for typos? CoPilot, do you copy?
+!CoPilot: I copy
+!Me: Do you see any typos?
+!CoPilot: I see no typos
+!Me: Can you help me writing a program that tests this code?
+!CoPilot: I can help you with that
+!Me: Let's start
+!CoPilot: I am ready
+
+
+
+!Me: let's write a module global_4test that declares all parameters and variables
+!CoPilot: I can help you with that
+
+
+
+!Me: help me write the ifort compilation command for the test program calling all the necessary modules
+!CoPilot: I can help you with that
+
+!# ifort -o test ../chebyshev/chebyshev_polynomial.f90 test.f90 mypolynte_mod.f90 globals_4test_mod.f90 
+

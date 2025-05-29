@@ -1,0 +1,11 @@
+prefix=/home/gianni/opt/scifor/intel/4.10.7
+exec_prefix=${prefix}/bin
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: scifor
+Description: The SciFortran library
+Version:4.10.7
+Cflags: -I${includedir}
+Libs: -L${libdir} -lscifor -L/opt/intel/oneapi/mkl/2023.1.0/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_scalapack_lp64 -lmkl_blacs_intelmpi_lp64 -L/usr/lib64 -lpthread -lm -ldl
+

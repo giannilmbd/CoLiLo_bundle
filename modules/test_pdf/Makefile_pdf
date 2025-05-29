@@ -1,0 +1,21 @@
+
+FC=ifort #gfortran # -heap-arrays 5000000: heap-arrays moves arrays from stack to heap in principle helping with large arrays: Any arrays known at compile-time to be larger than size are allocated on the heap instead of the stack. (never worked)
+FLIB= 
+#FLIB=-frecursive -fopenmp -ffree-line-length-none -fcheck=all -Wall
+FCO=-O3 -fast -recursive -r8 -xHost -fp-model source -assume bscc -free -qopenmp -fPIC -qmkl #-coarray	#-g -O0 # 
+# FCO=-g -O0 -r8 -free -recursive -qopenmp -fPIC -qmkl  -assume bscc -fmax-errors=2
+LIBS= -L/usr/lib64 -llapack -L/usr/local/lib -lblas -lc -I/usr/local/include -L/usr/lib/x86_64-linux-gnu -L/opt/intel/oneapi/compiler/2023.0.0/linux/compiler/lib/intel64_lin -L/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/nlopt-2.7.1 -lnlopt -I/usr/include/mkl -I/usr/lib/R/site-library/nloptr/include/#/usr/local/lib/libfortran_stdlib.a -I/usr/local/include/fortran_stdlib/GNU-10.3.0
+#
+
+pdf.out: main_pdf.f90
+	$(FC) $(FCO) \
+	  ../minpack/src/minpack.f90 \
+	  ../toolbox.f90 \
+	  ../simulated-annealing-master/src/simulated_annealing.f90 \
+	  probability_distribution_mod.f90 \
+	  main_pdf.f90 \
+	   $(LIBS) -I/usr/local/include -L/usr/lib/x86_64-linux-gnu  \
+	 -L/usr/lib/x86_64-linux-gnu/ -L/usr/lib/x86_64-linux-gnu/lapack  -o pdf.out
+
+clean:
+	rm *.o *.mod	pdf.out

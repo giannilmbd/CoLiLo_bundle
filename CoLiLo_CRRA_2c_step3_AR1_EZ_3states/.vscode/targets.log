@@ -1,0 +1,367 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.3
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Thu May 29 09:26:35 2025
+
+# Variables
+
+# environment
+GDK_BACKEND = x11
+# environment
+MEMORY_PRESSURE_WRITE = c29tZSAyMDAwMDAgMjAwMDAwMAA=
+# environment
+LC_ALL = C
+# environment
+GNOME_SHELL_SESSION_MODE = ubuntu
+# environment
+ISHMEM_ROOT = /opt/intel/oneapi/ishmem/1.3
+# environment
+CMAKE_PREFIX_PATH = /opt/intel/oneapi/tbb/2022.1/env/..:/opt/intel/oneapi/pti/0.12/lib/cmake/pti:/opt/intel/oneapi/mkl/2025.1/lib/cmake:/opt/intel/oneapi/ipp/2022.1/lib/cmake/ipp:/opt/intel/oneapi/dpl/2022.8/lib/cmake/oneDPL:/opt/intel/oneapi/dnnl/2025.1/lib/cmake:/opt/intel/oneapi/dal/2025.5:/opt/intel/oneapi/compiler/2025.1:/opt/intel/oneapi/ccl/2021.15/lib/cmake/oneCCL:/opt/intel/oneapi/tbb/2022.1/env/..:/opt/intel/oneapi/pti/0.12/lib/cmake/pti:/opt/intel/oneapi/mkl/2025.1/lib/cmake:/opt/intel/oneapi/ipp/2022.1/lib/cmake/ipp:/opt/intel/oneapi/dpl/2022.8/lib/cmake/oneDPL:/opt/intel/oneapi/dnnl/2025.1/lib/cmake:/opt/intel/oneapi/dal/2025.5:/opt/intel/oneapi/compiler/2025.1:/opt/intel/oneapi/ccl/2021.15/lib/cmake/oneCCL
+# environment
+C_INCLUDE_PATH = /opt/intel/oneapi/pti/0.12/include:/opt/intel/oneapi/pti/0.12/include
+# environment
+CCL_ROOT = /opt/intel/oneapi/ccl/2021.15
+# environment
+VSCODE_CRASH_REPORTER_PROCESS_TYPE = extensionHost
+# environment
+VSCODE_CWD = /home/gianni
+# environment
+CMPLR_ROOT = /opt/intel/oneapi/compiler/2025.1
+# environment
+WINDOWPATH = 2
+# default
+MAKE_COMMAND := make
+# environment
+GTK3_MODULES = xapp-gtk3-module
+# environment
+QT_ACCESSIBILITY = 1
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+VTUNE_PROFILER_2025_DIR = /opt/intel/oneapi/vtune/2025.3
+# environment
+TRIGGER_UNIT = update-notifier-crash.path
+# environment
+TCM_ROOT = /opt/intel/oneapi/tcm/1.3
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/CoLiLo_CRRA_2c_step3_AR1_EZ_3states
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+XDG_DATA_DIRS = /usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+DAL_MINOR_BINARY = 0
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_CODE_CACHE_PATH = /home/gianni/.config/Code/CachedData/848b80aeb52026648a8ff9f7c45a9b0a80641e2e
+# environment
+LANG = C
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# default
+.LOADED := 
+# default
+.INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
+# environment
+MEMORY_PRESSURE_WATCH = /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/update-notifier-crash.service/memory.pressure
+# makefile
+MAKEFLAGS = pqrR
+# environment
+PKG_CONFIG_PATH = /opt/intel/oneapi/vtune/2025.3/include/pkgconfig/lib64:/opt/intel/oneapi/tbb/2022.1/env/../lib/pkgconfig:/opt/intel/oneapi/mpi/2021.15/lib/pkgconfig:/opt/intel/oneapi/mkl/2025.1/lib/pkgconfig:/opt/intel/oneapi/ippcp/2025.1/lib/pkgconfig:/opt/intel/oneapi/dpl/2022.8/lib/pkgconfig:/opt/intel/oneapi/dnnl/2025.1/lib/pkgconfig:/opt/intel/oneapi/dal/2025.5/lib/pkgconfig:/opt/intel/oneapi/compiler/2025.1/lib/pkgconfig:/opt/intel/oneapi/ccl/2021.15/lib/pkgconfig/:/opt/intel/oneapi/advisor/2025.1/include/pkgconfig/lib64:/opt/intel/oneapi/vtune/2025.3/include/pkgconfig/lib64:/opt/intel/oneapi/tbb/2022.1/env/../lib/pkgconfig:/opt/intel/oneapi/mpi/2021.15/lib/pkgconfig:/opt/intel/oneapi/mkl/2025.1/lib/pkgconfig:/opt/intel/oneapi/ippcp/2025.1/lib/pkgconfig:/opt/intel/oneapi/dpl/2022.8/lib/pkgconfig:/opt/intel/oneapi/dnnl/2025.1/lib/pkgconfig:/opt/intel/oneapi/dal/2025.5/lib/pkgconfig:/opt/intel/oneapi/compiler/2025.1/lib/pkgconfig:/opt/intel/oneapi/ccl/2021.15/lib/pkgconfig/:/opt/intel/oneapi/advisor/2025.1/include/pkgconfig/lib64:
+# environment
+DPL_ROOT = /opt/intel/oneapi/dpl/2022.8
+# makefile
+CURDIR := /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/CoLiLo_CRRA_2c_step3_AR1_EZ_3states
+# environment
+ADVISOR_2025_DIR = /opt/intel/oneapi/advisor/2025.1
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+VSCODE_L10N_BUNDLE_LOCATION = 
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# default
+.SHELLFLAGS := -c
+# environment
+UMF_ROOT = /opt/intel/oneapi/umf/0.10
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+XDG_SESSION_DESKTOP = ubuntu
+# makefile
+MAKEFILE_LIST := 
+# environment
+CONDA_SHLVL = 0
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_PID = 706422
+# environment
+XDG_SESSION_TYPE = x11
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+CONDA_PYTHON_EXE = /home/gianni/anaconda3/bin/python
+# environment
+SESSION_MANAGER = local/gianni-HP:@/tmp/.ICE-unix/6681,unix/gianni-HP:/tmp/.ICE-unix/6681
+# automatic
+*F = $(notdir $*)
+# environment
+MANPATH = /opt/intel/oneapi/mpi/2021.15/share/man:/opt/intel/oneapi/debugger/2025.1/share/man:/opt/intel/oneapi/compiler/2025.1/share/man:/opt/intel/oneapi/mpi/2021.15/share/man:/opt/intel/oneapi/debugger/2025.1/share/man:/opt/intel/oneapi/compiler/2025.1/share/man:
+# environment
+CHROME_DESKTOP = code.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+FI_PROVIDER_PATH = /opt/intel/oneapi/mpi/2021.15/opt/mpi/libfabric/lib/prov:/usr/lib/x86_64-linux-gnu/libfabric
+# environment
+VSCODE_NLS_CONFIG = {"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}
+# environment
+CCL_CONFIGURATION = cpu_gpu_dpcpp
+# environment
+ONEAPI_ROOT = /opt/intel/oneapi
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# environment
+INFOPATH = /opt/intel/oneapi/debugger/2025.1/share/info:/opt/intel/oneapi/debugger/2025.1/share/info
+# makefile
+SHELL = /bin/sh
+# environment
+IPPCP_TARGET_ARCH = intel64
+# environment
+CLASSPATH = /opt/intel/oneapi/mpi/2021.15/share/java/mpi.jar:/opt/intel/oneapi/mpi/2021.15/share/java/mpi.jar
+# default
+MAKECMDGOALS := all
+# environment
+XMODIFIERS = @im=ibus
+# environment
+LD_LIBRARY_PATH = /opt/intel/oneapi/tcm/1.3/lib:/opt/intel/oneapi/umf/0.10/lib:/opt/intel/oneapi/tbb/2022.1/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/pti/0.12/lib:/opt/intel/oneapi/mpi/2021.15/opt/mpi/libfabric/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/mkl/2025.1/lib:/opt/intel/oneapi/ishmem/1.3/lib:/opt/intel/oneapi/ippcp/2025.1/lib/:/opt/intel/oneapi/ipp/2022.1/lib:/opt/intel/oneapi/dnnl/2025.1/lib:/opt/intel/oneapi/debugger/2025.1/opt/debugger/lib:/opt/intel/oneapi/dal/2025.5/lib:/opt/intel/oneapi/compiler/2025.1/opt/compiler/lib:/opt/intel/oneapi/compiler/2025.1/lib:/opt/intel/oneapi/ccl/2021.15/lib/:/opt/intel/oneapi/tcm/1.3/lib:/opt/intel/oneapi/umf/0.10/lib:/opt/intel/oneapi/tbb/2022.1/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/pti/0.12/lib:/opt/intel/oneapi/mpi/2021.15/opt/mpi/libfabric/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/mkl/2025.1/lib:/opt/intel/oneapi/ishmem/1.3/lib:/opt/intel/oneapi/ippcp/2025.1/lib/:/opt/intel/oneapi/ipp/2022.1/lib:/opt/intel/oneapi/dnnl/2025.1/lib:/opt/intel/oneapi/debugger/2025.1/opt/debugger/lib:/opt/intel/oneapi/dal/2025.5/lib:/opt/intel/oneapi/compiler/2025.1/opt/compiler/lib:/opt/intel/oneapi/compiler/2025.1/lib:/opt/intel/oneapi/ccl/2021.15/lib/::/usr/local/lib64:/usr/local/lib64
+# environment
+DALROOT = /opt/intel/oneapi/dal/2025.5
+# environment
+SHLVL = 0
+# environment
+MAKELEVEL := 0
+# environment
+IPPCRYPTOROOT = /opt/intel/oneapi/ippcp/2025.1
+# environment
+NLSPATH = /opt/intel/oneapi/compiler/2025.1/lib/compiler/locale/%l_%t/%N:/opt/intel/oneapi/compiler/2025.1/lib/compiler/locale/%l_%t/%N
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = /home/gianni/.local/bin:/opt/intel/oneapi/vtune/2025.3/bin64:/opt/intel/oneapi/mpi/2021.15/bin:/opt/intel/oneapi/mkl/2025.1/bin:/opt/intel/oneapi/ishmem/1.3/bin:/opt/intel/oneapi/dpcpp-ct/2025.1/bin:/opt/intel/oneapi/dev-utilities/2025.1/bin:/opt/intel/oneapi/debugger/2025.1/opt/debugger/bin:/opt/intel/oneapi/compiler/2025.1/bin:/opt/intel/oneapi/advisor/2025.1/bin64:/home/gianni/.local/bin:/home/gianni/anaconda3/condabin:/opt/intel/oneapi/vtune/2025.3/bin64:/opt/intel/oneapi/mpi/2021.15/bin:/opt/intel/oneapi/mkl/2025.1/bin:/opt/intel/oneapi/ishmem/1.3/bin:/opt/intel/oneapi/dpcpp-ct/2025.1/bin:/opt/intel/oneapi/dev-utilities/2025.1/bin:/opt/intel/oneapi/debugger/2025.1/opt/debugger/bin:/opt/intel/oneapi/compiler/2025.1/bin:/opt/intel/oneapi/advisor/2025.1/bin64:/home/gianni/.local/bin:/home/gianni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+# default
+MAKEFILES := 
+# automatic
+^F = $(notdir $^)
+# environment
+DIAGUTIL_PATH = /opt/intel/oneapi/dpcpp-ct/2025.1/etc/dpct/sys_check/sys_check.sh:/opt/intel/oneapi/compiler/2025.1/etc/compiler/sys_check/sys_check.sh:/opt/intel/oneapi/dpcpp-ct/2025.1/etc/dpct/sys_check/sys_check.sh:/opt/intel/oneapi/compiler/2025.1/etc/compiler/sys_check/sys_check.sh
+# environment
+OCL_ICD_FILENAMES = /opt/intel/oneapi/compiler/2025.1/lib/libintelocl.so
+# environment
+I_MPI_ROOT = /opt/intel/oneapi/mpi/2021.15
+# environment
+INVOCATION_ID = 6d303e72d69944f5b9ee694b7ddb7fdc
+# environment
+IPP_TARGET_ARCH = intel64
+# environment
+USERNAME = gianni
+# environment
+VTUNE_PROFILER_DIR = /opt/intel/oneapi/vtune/2025.3
+# automatic
+?F = $(notdir $?)
+# environment
+XDG_CURRENT_DESKTOP = Unity
+# environment
+MKLROOT = /opt/intel/oneapi/mkl/2025.1
+# automatic
++F = $(notdir $+)
+# environment
+DESKTOP_SESSION = ubuntu
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+CPATH = /opt/intel/oneapi/umf/0.10/include:/opt/intel/oneapi/tbb/2022.1/env/../include:/opt/intel/oneapi/mpi/2021.15/include:/opt/intel/oneapi/mkl/2025.1/include:/opt/intel/oneapi/ishmem/1.3/include:/opt/intel/oneapi/ippcp/2025.1/include:/opt/intel/oneapi/ipp/2022.1/include:/opt/intel/oneapi/dpl/2022.8/include:/opt/intel/oneapi/dpcpp-ct/2025.1/include:/opt/intel/oneapi/dnnl/2025.1/include:/opt/intel/oneapi/dev-utilities/2025.1/include:/opt/intel/oneapi/dal/2025.5/include:/opt/intel/oneapi/dal/2025.5/include/dal:/opt/intel/oneapi/ccl/2021.15/include:/opt/intel/oneapi/umf/0.10/include:/opt/intel/oneapi/tbb/2022.1/env/../include:/opt/intel/oneapi/mpi/2021.15/include:/opt/intel/oneapi/mkl/2025.1/include:/opt/intel/oneapi/ishmem/1.3/include:/opt/intel/oneapi/ippcp/2025.1/include:/opt/intel/oneapi/ipp/2022.1/include:/opt/intel/oneapi/dpl/2022.8/include:/opt/intel/oneapi/dpcpp-ct/2025.1/include:/opt/intel/oneapi/dnnl/2025.1/include:/opt/intel/oneapi/dev-utilities/2025.1/include:/opt/intel/oneapi/dal/2025.5/include:/opt/intel/oneapi/dal/2025.5/include/dal:/opt/intel/oneapi/ccl/2021.15/include
+# environment
+LOGNAME = gianni
+# makefile
+.DEFAULT_GOAL := 
+# environment
+SYSTEMD_EXEC_PID = 698879
+# environment
+DISPLAY = :1
+# environment
+USER = gianni
+# environment
+GTK_MODULES = gail:atk-bridge
+# environment
+LIBRARY_PATH = /opt/intel/oneapi/tcm/1.3/lib:/opt/intel/oneapi/umf/0.10/lib:/opt/intel/oneapi/tbb/2022.1/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/pti/0.12/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/mkl/2025.1/lib:/opt/intel/oneapi/ishmem/1.3/lib:/opt/intel/oneapi/ippcp/2025.1/lib/:/opt/intel/oneapi/ipp/2022.1/lib:/opt/intel/oneapi/dnnl/2025.1/lib:/opt/intel/oneapi/dal/2025.5/lib:/opt/intel/oneapi/compiler/2025.1/lib:/opt/intel/oneapi/ccl/2021.15/lib/:/opt/intel/oneapi/tcm/1.3/lib:/opt/intel/oneapi/umf/0.10/lib:/opt/intel/oneapi/tbb/2022.1/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/pti/0.12/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/mkl/2025.1/lib:/opt/intel/oneapi/ishmem/1.3/lib:/opt/intel/oneapi/ippcp/2025.1/lib/:/opt/intel/oneapi/ipp/2022.1/lib:/opt/intel/oneapi/dnnl/2025.1/lib:/opt/intel/oneapi/dal/2025.5/lib:/opt/intel/oneapi/compiler/2025.1/lib:/opt/intel/oneapi/ccl/2021.15/lib/
+# default
+MAKE_VERSION := 4.3
+# environment
+MANAGERPID = 5626
+# environment
+Pti_DIR = /opt/intel/oneapi/pti/0.12/lib/cmake/pti
+# environment
+DEBUGINFOD_URLS = https://debuginfod.ubuntu.com 
+# environment
+PYTHONPATH = /opt/intel/oneapi/advisor/2025.1/pythonapi:/opt/intel/oneapi/advisor/2025.1/pythonapi
+# environment
+_ = /usr/share/code/code
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+APM = /opt/intel/oneapi/advisor/2025.1/perfmodels
+# environment
+CPLUS_INCLUDE_PATH = /opt/intel/oneapi/pti/0.12/include:/opt/intel/oneapi/pti/0.12/include
+# environment
+JOURNAL_STREAM = 9:6191376
+# environment
+XDG_SESSION_CLASS = user
+# environment
+TRIGGER_PATH = /var/crash
+# environment
+GSM_SKIP_SSH_AGENT_WORKAROUND = true
+# environment
+GDB_INFO = /opt/intel/oneapi/debugger/2025.1/share/info/:/opt/intel/oneapi/debugger/2025.1/share/info/
+# environment
+HOME = /home/gianni
+# environment
+QT_IM_MODULE = ibus
+# environment
+TBBROOT = /opt/intel/oneapi/tbb/2022.1/env/..
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-01dc929e-1.10-main.sock
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+MATHEMATICA_HOME = /usr/local/Wolfram/Mathematica/14.0
+# environment
+INTEL_PYTHONHOME = /opt/intel/oneapi/debugger/2025.1/opt/debugger
+# environment
+IM_CONFIG_PHASE = 1
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+SETVARS_COMPLETED = 1
+# environment
+IPPROOT = /opt/intel/oneapi/ipp/2022.1
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
+# environment
+DNNLROOT = /opt/intel/oneapi/dnnl/2025.1
+# environment
+QTWEBENGINE_DICTIONARIES_PATH = /usr/share/hunspell-bdic/
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+DAL_MAJOR_BINARY = 3
+ 
+# environment
+VSCODE_ESM_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+CONDA_EXE = /home/gianni/anaconda3/bin/conda
+# environment
+GDMSESSION = ubuntu
+# variable set hash-table stats:
+# Load=141/1024=14%, Rehash=0, Collisions=12/168=7%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 2066, inode 64487946): 21 files, no impossibilities.
+
+# 21 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+GNUmakefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# files hash-table stats:
+# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 29 / storage = 325 B / avg = 11 B
+# current buf: size = 8162 B / used = 325 B / count = 29 / avg = 11 B
+
+# strcache performance: lookups = 32 / hit rate = 9%
+# hash-table stats:
+# Load=29/8192=0%, Rehash=0, Collisions=0/32=0%
+# Finished Make data base on Thu May 29 09:26:35 2025
+
+ 

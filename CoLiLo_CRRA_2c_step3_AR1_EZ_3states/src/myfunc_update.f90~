@@ -1,0 +1,290 @@
+subroutine myfunc_update(Numinp, x0, fval, parin0)
+! use bspline_mod
+use bspline_oo_module
+
+   use toolbox, only:spline_eval
+   use globals
+   use interp_mod, only: quadlinear_eval,bspline4_eval
+   implicit none
+   
+   integer, intent(in):: Numinp
+   real(kind=wp), intent(inout) :: x0(Numinp)
+   real(kind=wp), intent(out) :: fval(Numinp)
+   real(kind=wp), intent(in) :: parin0(100)
+   real(kind=wp) :: parin01(4), exit_crit, resid_change,x_states(4)
+   real(kind=wp) :: X1plus, X2plus, OmegaSplus, OmegaSplusplus, Omega1, Omega2, Omega1plus, A1plus1, A2plus1,OmegaS_n
+   real(kind=wp) ::  v1plus(NS,NS), v2plus(NS,NS), v1plusm1, v2plusm1,s1plus,A1_n,A2_n
+   real(kind=wp) ::  xin_V1, xin_V2,Xin_S, bis_a, bis_b, resid_a, resid_b!,xin_S
+   real(kind=wp) :: X_n1, X_n2, kappa, C1, C2, C1plus, mu, YWorld, pf, pf_new, L1, L2, ph, Q, Y1, res, pred
+   integer :: is_p1, is_p2, ik1_n, ik2_n, ik3_n, ik4_n, is1_n, is2_n, ik1, iter_2, cnt
+   real(kind=wp) :: temp_arr1(NS), temp_arr2(NS), possible_pf(nkappas + 1)
+   real(kind=wp) :: spline_array1(NS, NS), spline_array2(NS, NS), v1_arr(NS, NS), v2_arr(NS, NS)
+
+
+
+   ! control variables (policies)
+
+   ! xin_S=x_input(3)
+   ! relative MUC
+   ! State variables
+
+
+
+   is1_n = INT(parin0(1)) ! current shock index
+   is2_n = INT(parin0(2)) ! current shock index
+   ik1_n = INT(parin0(3))
+   ik2_n = INT(parin0(4))
+   ik3_n = INT(parin0(5))
+   ik4_n = INT(parin0(6))
+
+! parin01(1) = parin0(8)
+   kappa = kappaS(ik1_n)
+   A1_n = A1(ik2_n)
+   A2_n = A2(ik3_n)
+   OmegaS_n = OmegaS(ik4_n)
+
+! compute E_{t-1}V_t, which depends on state t-1 and expected innovations
+   Ev1m1(ik1_n, ik2_n, ik3_n,ik4_n, is1_n,is2_n) = 0e0_wp
+   Ev2m1(ik1_n, ik2_n, ik3_n,ik4_n, is1_n,is2_n) = 0e0_wp
+
+!SHOULD NOT PARALLELIZE THIS AS THE OUTER LAYER IS PARALLELIZED
+
+   x_states= [kappa,A1_n, &
+      A2_n,OmegaS_n ]
+   do is_p1 = 1, NS
+      do is_p2 = 1, NS
+      !   v1plusm1=abs(bspline4_eval(x_states, tx_v1(:,is_p1,is_p2), ty_v1(:,is_p1,is_p2),&
+      !    tz_v1(:,is_p1,is_p2), tq_v1(:,is_p1,is_p2), bcoef4_v1(:,:,:,:,is_p1,is_p2),  .true.))
+      !    v2plusm1=abs(bspline4_eval(x_states, tx_v2(:,is_p1,is_p2), ty_v2(:,is_p1,is_p2),&
+      !    tz_v2(:,is_p1,is_p2), tq_v2(:,is_p1,is_p2), bcoef4_v2(:,:,:,:,is_p1,is_p2),  .true.))
+! lagged expectations
+         if(cubic_spline) then
+            v1plusm1 = abs(spline_eval(x_states, &
+               coeff_v1(:, :, :,:, is_p1, is_p2), LB_all, UB_all))
+            v2plusm1 = abs(spline_eval(x_states, &
+               coeff_v2(:, :, :,:, is_p1, is_p2), LB_all, UB_all))
+         else
+            
+! … inside your nested loops over is_p1, is_p2 …
+
+! x_states = [ kappa_plus, A1_plus, A2_plus, Omega_plus ]
+            v1plusm1= abs(quadlinear_eval( &
+               x_states(1), x_states(2), x_states(3), x_states(4),  &
+               kappaS,   NK1+1,  &
+               A1,       NK2+1,  &
+               A2,       NK3+1,  &
+               OmegaS,   NK4+1,  &
+               v1(:, :, :, :, is_p1, is_p2) ))
+
+               v2plusm1= abs(quadlinear_eval( &
+               x_states(1), x_states(2), x_states(3), x_states(4),  &
+               kappaS,   NK1+1,  &
+               A1,       NK2+1,  &
+               A2,       NK3+1,  &
+               OmegaS,   NK4+1,  &
+               v2(:, :, :, :, is_p1, is_p2) ))
+         end if
+
+         Ev1m1(ik1_n, ik2_n, ik3_n,ik4_n,is1_n,is2_n) = Ev1m1(ik1_n, ik2_n, ik3_n,ik4_n, is1_n,is2_n) &
+            + pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*(v1plusm1)**theta ! See Rudebush and Swansson on changing sign with 1/gamma>1
+         Ev2m1(ik1_n, ik2_n, ik3_n,ik4_n, is1_n,is2_n) = Ev2m1(ik1_n, ik2_n, ik3_n,ik4_n,is1_n,is2_n) &
+            + pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*(v2plusm1)**theta
+
+      end do
+   end do
+
+
+   fval(:) = 1.0e6_wp
+   iter_2 = 0
+   res = 10e6_wp
+   ! ITERATE TILL CONVERGENCE
+
+   ! do while (((fval(1) > sig) .or. (fval(2) > sig)) .and. (iter_2 < itermax))
+   ! iter_2 = iter_2 + 1
+   xin_V1 = (x0(1))
+   xin_V2 = (x0(2))
+   xin_S =  (x0(3))
+   !!! BISECTION
+   possible_pf = 1.0e0_wp
+   ! note that pf must be pf>(1-nu)**(1/(trade_elast-1)) (if trade_elast>1, else it's not so important if nu<<1): see ph expression
+   possible_pf(1)=price_down;
+   possible_pf(2)=price_up
+   bis_a = possible_pf(1)
+   bis_b = possible_pf(2)
+   cnt = 1
+   exit_crit = 100.0e0_wp
+   resid_change = exit_crit
+   A1plus1=exp(log(A1(ik2_n))*rho_A1+eta1(is1_n))
+   A2plus1=exp(log(A2(ik3_n))*rho_A2+eta2(is2_n))
+   Omega1 = beta*(Ev1m1(ik1_n, ik2_n, ik3_n,ik4_n, is1_n,is2_n))**(1.0_wp/theta - 1.0_wp)*(xin_V1)**(theta - 1.0_wp) ! See RUdebusch and Swansson for change of sign
+
+   Omega2 = beta*(Ev2m1(ik1_n, ik2_n, ik3_n,ik4_n, is1_n,is2_n))**(1.0_wp/theta - 1.0_wp)*(xin_V2)**(theta - 1.0_wp)
+
+! update state variables
+! OmegaS (ie get OmegaS_t, which enters consumption shares and thus defines allocations)
+   OmegaSplus = Omega2/Omega1*OmegaS_n
+   if (trade_elast < 100.0e0_wp) then
+      call core_model(pf=bis_a, kappa=kappa,OmegaS_in=OmegaSplus, C=C1, Cs=C2, L=L1, Ls=L2, &
+         ph=ph, Q=Q, Y1=Y1, res=resid_a, pred=pred, D=A1plus1, Ds=A2plus1)
+      call core_model(pf=bis_b, kappa=kappa,OmegaS_in=OmegaSplus, C=C1, Cs=C2, L=L1, Ls=L2, &
+         ph=ph, Q=Q, Y1=Y1, res=resid_b, pred=pred, D=A1plus1, Ds=A2plus1)
+
+! Check if initial bounds are valid
+      if (sign(1.0e0_wp, resid_a) .eq. sign(1.0e0_wp, resid_b)) then
+         print *, ANSI_RED//"WARNING: Initial bounds for prices do not bracket the root. Adjusting bounds."//ANSI_RESET
+         ! Optionally, terminate or adjust bounds here.
+         bis_a=1.0e-6
+         bis_b=bis_b+10.0_wp
+      end if
+
+      bisection: do while ((cnt .le. nkappas) .and. (abs(exit_crit) > sig_pf) .and. (abs(resid_change)/abs(exit_crit) > sig_pf))
+         if (cnt <= 2) then
+            pf = possible_pf(cnt)
+         else
+            pf = (bis_a + bis_b)/2.0e0_wp
+            possible_pf(cnt) = pf
+         end if
+
+         ! Compute residual at the current midpoint
+         call core_model(pf=pf, kappa=kappa,OmegaS_in=OmegaSplus ,C=C1, Cs=C2, L=L1, Ls=L2, &
+            ph=ph, Q=Q, Y1=Y1, res=res, pred=pred, D=A1plus1, Ds=A2plus1)
+         resid_change = exit_crit - res
+         exit_crit = res
+
+         if ((abs(res) < sig_pf) .or. (cnt == nkappas)) then
+            exit
+         end if
+
+         ! Update bounds based on the sign of the residual
+         if (cnt == 1) then
+            resid_a = res
+         elseif (cnt == 2) then
+            resid_b = res
+            if (verbose.and.(sign(1.0e0_wp, resid_a) .eq. sign(1.0e0_wp, resid_b))) then
+               print *, "WARNING: Residuals at bounds still have the same sign. Expanding bounds."
+               bis_b = bis_b + step_kappa
+            end if
+         else
+            if (sign(1.0e0_wp, resid_a) .eq. sign(1.0e0_wp, res)) then
+               resid_a = res
+               bis_a = pf
+            elseif (sign(1.0e0_wp, resid_b) .eq. sign(1.0e0_wp, res)) then
+               resid_b = res
+               bis_b = pf
+            end if
+         end if
+         cnt = cnt + 1
+      end do bisection
+   else
+      pf = 1.0e0_wp
+      call core_model(pf=pf, kappa=kappa,OmegaS_in=OmegaSplus,  C=C1, Cs=C2, L=L1, Ls=L2, &
+         ph=ph, Q=Q, Y1=Y1, res=res, pred=pred, D=A1plus1, Ds=A2plus1)
+   end if
+
+   !  print*,'stop'
+! read(*,*)cnt
+   if ((verbose).and.(abs(res)>sig_pf)) then
+! if (abs(res)>sig_pf) then
+      write(*,'(a,e20.10)') ANSI_RED // 'RESIDUAL PRICE CM ABOVE THRESHOLD' // ANSI_RESET, res
+   endif
+
+   if (cnt>=nkappas) then
+      print*,'\033[91m PRICE NOT SOLVED \033[0m'
+      print*,'residual',res
+   endif
+   !########################################################################
+
+
+   ! call core_model(pf=pf, kappa=kappa, C=C1, Cs=C2, L=L1, Ls=L2,&
+   ! D=parin01(2),Ds=parin01(3))
+   ! future expectations depend on the update of the policy function Xin_V1 and xin_V2 via OmegaSplus
+   Ev1(ik1_n,ik2_n,ik3_n,ik4_n, is1_n, is2_n) = 0e0_wp
+   Ev2(ik1_n,ik2_n,ik3_n,ik4_n, is1_n, is2_n) = 0e0_wp
+   !!!$omp parallel shared(Ev1,Ev2) private(v1plus,v2plus) default(shared)
+   !! !$omp do reduction(+:Ev1,Ev2)
+
+   x_states=[kappa,A1plus1,A2plus1,OmegaSplus]
+   do is_p1 = 1, NS
+      do is_p2 = 1, NS
+
+         if(cubic_spline) then
+
+            ! v1plus(is_p1,is_p2)=abs(bspline4_eval(x_states, tx_v1(:,is_p1,is_p2), ty_v1(:,is_p1,is_p2),&
+            ! tz_v1(:,is_p1,is_p2), tq_v1(:,is_p1,is_p2), bcoef4_v1(:,:,:,:,is_p1,is_p2),  .true.))
+            ! v2plus(is_p1,is_p2) =abs(bspline4_eval(x_states, tx_v2(:,is_p1,is_p2), ty_v2(:,is_p1,is_p2),&
+            ! tz_v2(:,is_p1,is_p2), tq_v2(:,is_p1,is_p2), bcoef4_v2(:,:,:,:,is_p1,is_p2),  .true.))
+            v1plus(is_p1,is_p2) = spline_eval(x_states, &
+               coeff_v1(:,:,:,:, is_p1, is_p2), LB_all, UB_all)
+               
+            v2plus(is_p1,is_p2) = spline_eval(x_states, &
+               coeff_v2(:,:,:,:,  is_p1, is_p2), LB_all, UB_all)
+         else
+            
+! … inside your nested loops over is_p1, is_p2 …
+
+! x_states = [ kappa_plus, A1_plus, A2_plus, Omega_plus ]
+            v1plus(is_p1, is_p2) = abs(quadlinear_eval( &
+               x_states(1), x_states(2), x_states(3), x_states(4),  &
+               kappaS,   NK1+1,  &
+               A1,       NK2+1,  &
+               A2,       NK3+1,  &
+               OmegaS,   NK4+1,  &
+               v1(:, :, :, :, is_p1, is_p2) ))
+
+            v2plus(is_p1, is_p2) = abs(quadlinear_eval( &
+               x_states(1), x_states(2), x_states(3), x_states(4),  &
+               kappaS,   NK1+1,  &
+               A1,       NK2+1,  &
+               A2,       NK3+1,  &
+               OmegaS,   NK4+1,  &
+               v2(:, :, :, :, is_p1, is_p2) ))
+
+         end if
+         ! ! extrapolation if at the bound(s)
+
+         ! ! extrapolation if at the bound(s)
+         ! ! print*,"line698 test.f90 must allow for undervalue and for over-under-value shocks"
+         ! if ((kappa > kappa_u)) then
+         !     ! print*,'here3'
+         !     v1plus = v1plus + (v1(NK1, is_p1, is_p2) - v1(NK1 - 1,  is_p1, is_p2)) &
+         !              /(kappaS(NK1) - kappaS(NK1 - 1))*(kappa - kappa_u)
+         !     v2plus = v2plus + (v2(NK1, is_p1, is_p2) - v2(NK1 - 1,  is_p1, is_p2)) &
+         !     /(kappaS(NK1) - kappaS(NK1 - 1))*(kappa - kappa_u)
+         !     s1plus=s1plus+(s1(NK1, is_p1, is_p2) - s1(NK1 - 1,  is_p1, is_p2)) &
+         !     /(kappaS(NK1) - kappaS(NK1 - 1))*(kappa - kappa_u)
+
+         ! end if
+         ! ! NO NEED TO INTERPOLATE HERE (ALL STATES ARE NON-ENDOGENOUS)
+         ! v1plus=v1(ik1_n,ik2_n,ik3_n,is_p1,is_p2)
+         ! v2plus=v2(ik1_n,ik2_n,ik3_n,is_p1,is_p2)
+         ! s1plus=s1(ik1_n,ik2_n,ik3_n,is_p1,is_p2)
+         Ev1(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n) = Ev1(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n)   + pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*v1plus(is_p1,is_p2)**theta ! See Rudebush and Swansson on changing sign with 1/gamma>1
+         Ev2(ik1_n,ik2_n,ik3_n,ik4_n , is1_n, is2_n) = Ev2(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n)   + pi1(is1_n, is_p1)*pi2(is2_n, is_p2)*v2plus(is_p1,is_p2)**theta
+
+      end do
+   end do
+
+   !! !$omp END DO
+   !!!$omp END PARALLEL
+   ! get first order condition
+   x0(1) = -(1e0_wp - beta)*(C1**(1e0_wp - 1e0_wp/gamma)/(1e0_wp - 1e0_wp/gamma)-chhi*L1**(1.0e0_wp+varphi)/(1.0e0_wp+varphi)) + beta*(Ev1(ik1_n,ik2_n,ik3_n,ik4_n, is1_n, is2_n))**(1.0e0_wp/theta)
+   x0(2) = -(1e0_wp - beta)*(C2**(1e0_wp - 1e0_wp/gamma)/(1e0_wp - 1e0_wp/gamma)-chhi*L2**(1.0e0_wp+varphi)/(1.0e0_wp+varphi)) + beta*(Ev2(ik1_n,ik2_n,ik3_n,ik4_n, is1_n, is2_n))**(1.0e0_wp/theta)
+
+
+   fval(1) = abs((x0(1) - xin_V1)/xin_V1)
+   fval(2) = abs((x0(2) - xin_V2)/xin_V2)
+
+! WE ARE GOING TO USE THE FOLLOWING IN ARROW SECURITIES
+   C1v(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n) =C1
+   L1v(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n) = L1
+   Y1v(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n)= Y1
+   pf_sols(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n)=pf
+
+   phv(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n)=ph
+   OmegaSplusv(ik1_n,ik2_n,ik3_n,ik4_n,  is1_n, is2_n)=OmegaSplus
+! write(*,'(A,f15.5,2x,A,2x,f15.5,A)')ANSI_YELLOW//'Value functions at t=0: V1 = ',x0(1),'V2 = ',x0(2),ANSI_RESET
+
+
+end subroutine
+
+

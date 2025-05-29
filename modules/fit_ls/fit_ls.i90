@@ -1,0 +1,83 @@
+# 1 "/mnt/twotera/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/fit_ls/fit_ls.f90"
+subroutine fit_ls(n,m0,x,y,beta,std_err,std_err_res)
+use my_kinds_mod, only: wp
+implicit none
+
+integer, intent(in) :: n,m0
+integer :: m
+real(kind=wp), intent(in) :: x(n,m0),y(n)
+real(kind=wp) :: beta(m0+1), residual(n)
+real(kind=wp) :: std_err(m0+1),std_err_res
+real(kind=wp) :: z(n,m0+1), zpz_inv(m0+1,m0+1)
+integer :: cnt
+
+m=m0+1
+
+
+z(:,1)=1.0_wp
+z(:,2:)=x
+zpz_inv=A_inv(matmul(transpose(z),z))
+beta=matmul(zpz_inv,matmul(transpose(z),y))
+residual=y-matmul(beta,z)
+std_err_res=sqrt(sum((residual-sum(residual)/(n-1))**2/(n-m)))
+do cnt=1,m
+std_err(cnt)=std_err_res/sqrt(zpz_inv(cnt,cnt))
+enddo
+
+
+contains
+function A_inv(A)
+use my_kinds_mod, only: wp
+implicit none 
+    integer :: n
+    real(kind=wp), intent(in) :: A(:,:)
+    integer :: ipiv(size(A,1)+2)
+    integer :: info
+  real(kind=wp),allocatable, dimension(:) :: work
+  integer :: lwork
+! Create a working copy of A
+    real(kind=wp),dimension(size(A,1),size(A,2)) :: A_copy,A_inv
+! Declare external LAPACK functions
+external dgetrf
+external dgetri
+
+n=size(A,1)
+
+    A_copy = A
+
+! Perform LU decomposition
+    call dgetrf(n, n, A_copy, n, ipiv, info)
+
+    if (info == 0) then
+! Solve the system to find the inverse
+
+! Query the optimal workspace size
+    lwork = -1
+    allocate(work(1))
+    call dgetri(n, A_copy, n, ipiv, work, lwork, info)
+
+! Allocate workspace of the correct size
+    lwork = int(work(1))
+    deallocate(work)
+    allocate(work(lwork))
+
+! Solve the system to find the inverse
+    call dgetri(n, A_copy, n, ipiv, work, lwork, info)
+
+    deallocate(work)
+
+
+      if (info == 0) then
+! Copy the result back to A_inv
+        A_inv = A_copy
+      else
+        print *, "Error: Failed to compute the inverse (dgetri)"
+      end if
+    else
+      print *, "Error: LU decomposition failed (dgetrf)"
+    end if
+  end function A_inv
+
+end subroutine fit_ls
+
+

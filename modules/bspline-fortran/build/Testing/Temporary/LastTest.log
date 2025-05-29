@@ -1,0 +1,233 @@
+Start testing: Apr 24 14:20 CEST
+----------------------------------------------------------
+1/6 Testing: bspline_test_2
+1/6 Test: bspline_test_2
+Command: "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build/bspline_test_2"
+Directory: /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build
+"bspline_test_2" start time: Apr 24 14:20 CEST
+Output:
+----------------------------------------------------------
+           1 D: max error:  1.989510124839527E-003
+  ** test passed ** 
+ 
+           2 D: max error:  8.879443914378005E-004
+  ** test passed ** 
+ 
+           3 D: max error:  1.080184807231266E-003
+  ** test passed ** 
+ 
+           4 D: max error:  1.277668995706582E-003
+  ** test passed ** 
+ 
+           5 D: max error:  1.538405832258061E-003
+  ** test passed ** 
+ 
+           6 D: max error:  1.874276917247730E-003
+  ** test passed ** 
+ 
+<end of output>
+Test time =  26.77 sec
+----------------------------------------------------------
+Test Passed.
+"bspline_test_2" end time: Apr 24 14:20 CEST
+"bspline_test_2" time elapsed: 00:00:26
+----------------------------------------------------------
+
+2/6 Testing: bspline_test
+2/6 Test: bspline_test
+Command: "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build/bspline_test"
+Directory: /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build
+"bspline_test" start time: Apr 24 14:20 CEST
+Output:
+----------------------------------------------------------
+           1 D: max error:  1.110223024625157E-016
+  ** test passed ** 
+ 
+           2 D: max error:  2.220446049250313E-016
+  ** test passed ** 
+ 
+           3 D: max error:  4.440892098500626E-016
+  ** test passed ** 
+ 
+           4 D: max error:  7.771561172376096E-016
+  ** test passed ** 
+ 
+           5 D: max error:  8.881784197001252E-016
+  ** test passed ** 
+ 
+           6 D: max error:  1.776356839400250E-015
+  ** test passed ** 
+ 
+<end of output>
+Test time =   4.87 sec
+----------------------------------------------------------
+Test Passed.
+"bspline_test" end time: Apr 24 14:20 CEST
+"bspline_test" time elapsed: 00:00:04
+----------------------------------------------------------
+
+3/6 Testing: stack_size_test_oo
+3/6 Test: stack_size_test_oo
+Command: "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build/stack_size_test_oo"
+Directory: /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build
+"stack_size_test_oo" start time: Apr 24 14:20 CEST
+Output:
+----------------------------------------------------------
+ 
+num points         size (bytes)                          error
+        90            373412096         0.9992007221626409E-15
+ 
+<end of output>
+Test time =   1.23 sec
+----------------------------------------------------------
+Test Passed.
+"stack_size_test_oo" end time: Apr 24 14:20 CEST
+"stack_size_test_oo" time elapsed: 00:00:01
+----------------------------------------------------------
+
+4/6 Testing: test_integrate
+4/6 Test: test_integrate
+Command: "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build/test_integrate"
+Directory: /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build
+"test_integrate" start time: Apr 24 14:20 CEST
+Output:
+----------------------------------------------------------
+ 
+  Method Order                       Integral                          Error
+ db1sqad     2         0.5869353863578366E+01        -0.2505375109924657E-03
+ db1sqad     3         0.5869604396570402E+01        -0.4518955876164910E-08
+ db1sqad     4         0.5869604401960508E+01         0.8711502630376344E-09
+ db1sqad     5         0.5869604401097369E+01         0.8011369345695130E-11
+ db1sqad     6         0.5869604401089271E+01        -0.8704148513061227E-13
+ db1sqad     7         0.5869604401089354E+01        -0.3552713678800501E-14
+ db1sqad     8         0.5869604401089360E+01         0.1776356839400250E-14
+ db1sqad     9         0.5869604401089359E+01         0.8881784197001252E-15
+ db1sqad    10         0.5869604401089360E+01         0.1776356839400250E-14
+ db1sqad    11         0.5869604401089359E+01         0.8881784197001252E-15
+ db1sqad    12         0.5869604401089359E+01         0.8881784197001252E-15
+ db1sqad    13         0.5869604401089358E+01         0.0000000000000000E+00
+ db1sqad    14         0.5869604401089360E+01         0.1776356839400250E-14
+ db1sqad    15         0.5869604401089358E+01         0.0000000000000000E+00
+ 
+  Method Order                       Integral                          Error
+ db1fqad     2         0.5869455400140733E+01        -0.1490009486246890E-03
+ db1fqad     3         0.5869604420952841E+01         0.1986348330262899E-07
+ db1fqad     4         0.5869604400336961E+01        -0.7523972556100489E-09
+ db1fqad     5         0.5869604401086837E+01        -0.2520650355108955E-11
+ db1fqad     6         0.5869604401089355E+01        -0.2664535259100376E-14
+ db1fqad     7         0.5869604401089357E+01        -0.8881784197001252E-15
+ db1fqad     8         0.5869604401089358E+01         0.0000000000000000E+00
+ db1fqad     9         0.5869604401089357E+01        -0.8881784197001252E-15
+ db1fqad    10         0.5869604401089358E+01         0.0000000000000000E+00
+ db1fqad    11         0.5869604401089359E+01         0.8881784197001252E-15
+ db1fqad    12         0.5869604401089358E+01         0.0000000000000000E+00
+ db1fqad    13         0.5869604401089357E+01        -0.8881784197001252E-15
+ db1fqad    14         0.5869604401089359E+01         0.8881784197001252E-15
+ db1fqad    15         0.5869604401089356E+01        -0.1776356839400250E-14
+ 
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"test_integrate" end time: Apr 24 14:20 CEST
+"test_integrate" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/6 Testing: test_oo
+5/6 Test: test_oo
+Command: "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build/test_oo"
+Directory: /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build
+"test_oo" start time: Apr 24 14:20 CEST
+Output:
+----------------------------------------------------------
+ 
+ size of 1d structure:        15616 bytes
+ size of 2d structure:        39168 bytes
+ size of 3d structure:       145664 bytes
+ size of 4d structure:       737536 bytes
+ size of 5d structure:      4192512 bytes
+ size of 6d structure:     24629504 bytes
+ 
+           1 D: max error:  1.110223024625157E-016
+  ** test passed ** 
+ 
+           2 D: max error:  2.220446049250313E-016
+  ** test passed ** 
+ 
+           3 D: max error:  4.440892098500626E-016
+  ** test passed ** 
+ 
+           4 D: max error:  7.771561172376096E-016
+  ** test passed ** 
+ 
+           5 D: max error:  8.881784197001252E-016
+  ** test passed ** 
+ 
+           6 D: max error:  1.776356839400250E-015
+  ** test passed ** 
+ 
+<end of output>
+Test time =   4.83 sec
+----------------------------------------------------------
+Test Passed.
+"test_oo" end time: Apr 24 14:20 CEST
+"test_oo" time elapsed: 00:00:04
+----------------------------------------------------------
+
+6/6 Testing: test_regrid
+6/6 Test: test_regrid
+Command: "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build/test_regrid"
+Directory: /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules/bspline-fortran/build
+"test_regrid" start time: Apr 24 14:20 CEST
+Output:
+----------------------------------------------------------
+ -----------------
+   INITIAL DATA:
+ -----------------
+x:
+    0.000000     2.000000     4.000000     6.000000     8.000000    10.000000
+ 
+y:
+    0.000000     2.000000     4.000000     6.000000     8.000000
+ 
+fcn(x,y):
+    0.000000    0.034899    0.069756    0.104528    0.139173
+    0.034899    0.069756    0.104528    0.139173    0.173648
+    0.069756    0.104528    0.139173    0.173648    0.207912
+    0.104528    0.139173    0.173648    0.207912    0.241922
+    0.139173    0.173648    0.207912    0.241922    0.275637
+    0.173648    0.207912    0.241922    0.275637    0.309017
+ 
+ -----------------
+   NEW GRID:
+ -----------------
+x:
+    0.000000     1.000000     2.000000     3.000000     4.000000     5.000000     6.000000     7.000000     8.000000     9.000000    10.000000
+ 
+y:
+    0.000000     1.000000     2.000000     3.000000     4.000000     5.000000     6.000000     7.000000     8.000000
+ 
+fcn(x,y):
+    0.000000    0.017452    0.034899    0.052336    0.069756    0.087156    0.104528    0.121869    0.139173
+    0.017452    0.034900    0.052336    0.069756    0.087156    0.104528    0.121869    0.139173    0.156434
+    0.034899    0.052336    0.069756    0.087156    0.104528    0.121869    0.139173    0.156434    0.173648
+    0.052336    0.069756    0.087156    0.104528    0.121869    0.139173    0.156434    0.173648    0.190809
+    0.069756    0.087156    0.104528    0.121869    0.139173    0.156434    0.173648    0.190809    0.207912
+    0.087156    0.104528    0.121869    0.139173    0.156434    0.173648    0.190809    0.207912    0.224951
+    0.104528    0.121869    0.139173    0.156434    0.173648    0.190809    0.207912    0.224951    0.241922
+    0.121869    0.139173    0.156434    0.173648    0.190809    0.207912    0.224951    0.241922    0.258819
+    0.139173    0.156434    0.173648    0.190809    0.207912    0.224951    0.241922    0.258819    0.275637
+    0.156434    0.173648    0.190809    0.207912    0.224951    0.241922    0.258819    0.275637    0.292372
+    0.173648    0.190809    0.207912    0.224951    0.241922    0.258819    0.275637    0.292372    0.309017
+ 
+  max error:  1.923971165718186E-008
+ 
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_regrid" end time: Apr 24 14:20 CEST
+"test_regrid" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 24 14:20 CEST

@@ -1,0 +1,16 @@
+subroutine outerproduct(x,y,nx,ny,z)
+
+implicit none
+integer, intent(in) :: nx, ny
+double precision ,intent(in) :: x(nx),y(ny)
+double precision, intent(out) :: z(nx,ny)
+
+integer :: jj
+
+z=0.0d0;
+do jj=1,ny
+z(:,jj)=x*y(jj);
+enddo
+
+return 
+end subroutine

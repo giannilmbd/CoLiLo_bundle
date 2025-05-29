@@ -1,0 +1,211 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/quasi_newton_mod.f90"
+module quasi_newton_mod
+
+    implicit none
+
+    public :: quasi_newton
+    public :: inverse_matrix
+    public :: gradient
+    public :: line_search
+
+    public :: update_inverse_matrix
+
+    interface
+        function f(x) result(y)
+            real(kind=8), dimension(:), intent(in) :: x
+            real(kind=8), dimension(size(x,1)) :: y
+        end function f
+    end interface
+
+    contains
+    
+! This subroutine computes the gradient of the function f at the point x
+    subroutine gradient(x, g)
+        real(kind=8), dimension(:), intent(in) :: x
+        real(kind=8), dimension(size(x,1)), intent(out) :: g
+        real(kind=8), parameter :: eps = 1.0E-8
+        real(kind=8), dimension(size(x,1), size(x,1)) :: Jmx
+        real(kind=8), dimension(size(x,1)) :: xplus, xminus
+        integer :: i, j
+        do i = 1, size(x)
+            xplus = x
+            xplus(i) = xplus(i) + eps
+            xminus = x
+            xminus(i) = xminus(i) - eps
+            Jmx(:,i) = (f(xplus) - f(xminus)) / (2.0 * eps)
+        end do
+    
+        g = matmul(Jmx, f(x))
+    end subroutine gradient
+    
+! This subroutine finds an acceptable step size alpha
+    subroutine line_search(x, p, alpha, maxit, tol, fxnew, g)
+! Input:
+!   x: the current point
+!   p: the search direction
+!   alpha: the initial step size (updated in place)
+!   maxit: the maximum number of iterations
+!   tol: the tolerance for the convergence test
+!   g: the gradient of the function at the current point
+! Output:
+!   alpha: the final step size
+!   fxnew: the value of the function at the new point
+!   g: the gradient of the function at the new point
+    
+        integer, intent(in) :: maxit
+        real(kind=8), intent(in) :: tol
+        real(kind=8), dimension(:), intent(inout) :: x, p, g
+        real(kind=8), intent(inout) :: alpha, fxnew
+    
+        integer :: iter
+        real(kind=8) :: fx, slope, falpha, dalpha
+        real(kind=8), parameter :: rho = 0.5, c1 = 1.0E-4, c2 = 0.9
+    
+        fx = sum(f(x))
+        slope = dot_product(g, p)
+    
+        do iter = 1, maxit
+            x = x + alpha * p
+            call gradient(x, g)
+            fxnew = sum(f(x))
+            dalpha = dot_product(g, p)
+            falpha = fx + c1 * alpha * slope
+            if (fxnew > falpha) then
+! Armijo condition not satisfied, reduce alpha
+            alpha = rho * alpha
+            else
+! Armijo condition satisfied, check curvature condition
+            if (dot_product(g, p) < c2 * slope) then
+! Curvature condition satisfied, return alpha
+            return
+            else
+! Curvature condition not satisfied, increase alpha
+            alpha = alpha / rho
+            end if
+            end if
+            if (dabs(dalpha) < tol) return
+            end do
+! Max iterations reached, return current alpha
+            end subroutine line_search
+! This function computes the inverse of a matrix using BFGS updates
+            function inverse_matrix(H0, s, y) result(H)
+                real(kind=8), dimension(:,:), intent(in) :: H0
+                real(kind=8), dimension(:), intent(in) :: s, y
+                real(kind=8), dimension(size(s)) :: Hy, Hs, Hys
+                real(kind=8) :: rho, alpha, beta
+                integer :: i, j
+            
+                Hs = matmul(H0, s)
+                rho = 1.0 / dot_product(s, y)
+                alpha = rho * dot_product(s, Hs)
+                Hy = matmul(H0, y)
+                Hys = matmul(Hy, s)
+            
+                do i = 1, size(s)
+                    do j = 1, size(s)
+                        H(i,j) = H0(i,j) + rho*y(i)*y(j) - rho*Hys(i)*s(j) - rho*s(i)*Hy(j) + rho*alpha*s(i)*s(j)
+                    end do
+                end do
+            
+                do i = 1, size(s)
+                    do j = i+1, size(s)
+                        H(j,i) = H(i,j)
+                    end do
+                end do
+            
+            end function inverse_matrix
+            
+! This subroutine updates the inverse matrix H using BFGS updates
+            subroutine update_inverse_matrix(H, s, y)
+                real(kind=8), dimension(:,:), intent(inout) :: H
+                real(kind=8), dimension(:), intent(in) :: s, y
+                real(kind=8), dimension(size(s)) :: Hy, Hs, Hys
+                real(kind=8) :: rho, alpha, beta
+                integer :: i, j
+            
+                Hs = matmul(H, s)
+                rho = 1.0 / dot_product(s, y)
+                alpha = rho * dot_product(s, Hs)
+                Hy = matmul(H, y)
+                Hys = matmul(Hy, s)
+            
+                do i = 1, size(s)
+                    do j = 1, size(s)
+                        H(i,j) = H(i,j) + rho*y(i)*y(j) - rho*Hys(i)*s(j) - rho*s(i)*Hy(j) + rho*alpha*s(i)*s(j)
+                    end do
+                end do
+            
+                do i = 1, size(s)
+                    do j = i+1, size(s)
+                        H(j,i) = H(i,j)
+                    end do
+                end do
+            
+            end subroutine update_inverse_matrix
+            
+! This function performs quasi-Newton optimization using the BFGS algorithm
+            function quasi_newton(x0, maxit, tol, H0) result(x)
+! Input:
+!   x0: the initial guess for the optimization
+!   maxit: the maximum number of iterations
+! tol: the tolerance for the convergence test
+! H0: the initial approximation of the inverse Hessian matrix (optional)
+! Output:
+! x: the optimized point
+                real(kind=8), dimension(:), intent(inout) :: x0
+                integer, intent(in) :: maxit
+                real(kind=8), intent(in) :: tol
+                real(kind=8), dimension(size(x0,1), size(x0,1)), optional :: H0
+                real(kind=8), dimension(size(x0,1)) :: p, g, s, y
+                real(kind=8) :: alpha, fxnew, fx, ys, ss, rho, beta
+                integer :: iter, n
+                
+                n = size(x0,1)
+                
+! Initialize the inverse Hessian approximation
+                if (present(H0)) then
+                    call inverse_matrix(H0)
+                else
+                    allocate(H0(n,n))
+                    H0 = 0.0
+                    do iter = 1, n
+                        H0(iter,iter) = 1.0
+                    end do
+                end if
+                
+! Compute the gradient of the function at the initial point
+                call gradient(x0, g)
+                
+! Set the initial point and function value
+                x = x0
+                fx = sum(f(x))
+                
+                do iter = 1, maxit
+! Compute the search direction using the inverse Hessian approximation
+                    p = -matmul(H0, g)
+                    
+! Perform a line search to find an acceptable step size
+                    call line_search(x, p, alpha, 20, 1.0E-4, fxnew, g)
+                    
+! Compute the change in position and gradient
+                    s = alpha * p
+                    call gradient(x + s, y)
+                    y = y - g
+                    
+! Update the inverse Hessian approximation using the BFGS formula
+                    ys = dot_product(y, s)
+                    ss = dot_product(s, s)
+                    rho = 1.0 / ys
+                    beta = rho * dot_product(y, matmul(H0, y))
+                    H0 = H0 + rho * matmul(s, transpose(s)) - rho * beta * matmul(y, transpose(y)) + (beta * beta * ys) * matmul(H0, transpose(H0))
+                    
+! Update the current position and function value
+                    x = x + s
+                    fx = fxnew
+                    
+! Check for convergence
+                    if (sqrt(dot_product(s, s)) < tol) exit
+                end do
+            end function quasi_newton
+
+        end module quasi_newton_mod

@@ -1,0 +1,11 @@
+subroutine mydotproduct(X,Y,N,Z)
+
+implicit none
+
+double precision :: X(1,N),Y(N,1)
+double precision :: Z
+integer :: N
+integer :: i
+Z=sum((/(X(1,i)*Y(i,1),i=1,N)/))
+return
+end subroutine

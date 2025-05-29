@@ -1,0 +1,15 @@
+program test_eig
+
+implicit none
+integer :: nx, jj
+parameter(nx=10)
+double precision, dimension(nx,nx) :: X
+double precision, dimension(nx,1) :: eigs
+X=0.0
+do jj=1,nx
+X(jj,jj)=1;
+enddo 
+
+call abseig(X,nx,eigs)
+
+end program

@@ -1,0 +1,109 @@
+program main_pdf
+    use probability_distribution_mod
+    use omp_lib
+    ! use ogpf
+
+    implicit none
+    integer, parameter:: size_x=5
+    real(wp) :: x(size_x),fdata(4),lb(size_x)
+    integer  :: num_threads 
+    real(wp) :: a1,a2,a3,a4,a5,me,va,sk,ku
+   integer :: solver,slv
+   integer*8 :: opt
+   real(wp) :: minf,res,shr_smpl
+   integer :: ires,nevals,indx_smpl 
+   logical :: check
+include 'nlopt.f'
+   solver=1
+   write(*,*) "--------------------------"
+   write(*,*) "\033[95m CHOOSE SOLVER \033[0m"
+   write(*,*) "--------------------------"
+   write(*,*) "1=\033[95m NLOPT_LN_NELDERMEAD \033[0m"
+   write(*,*) "2=\033[95m NLOPT_GN_CRS2_LM \033[0m"
+   write(*,*) "3=\033[95m NLOPT_LN_SBPLX \033[0m"
+   write(*,*) "4=\033[95m NLOPT_LD_MMA \033[0m"
+   write(*,*) "5=\033[95m NLOPT_GN_DIRECT_L_RAND \033[0m"
+   write(*,*) "6=\033[95m NLOPT_LN_COBYLA \033[0m"
+   write(*,*) "7=\033[95m NLOPT_GN_ESCH \033[0m"
+   write(*,*) "<0 ==>\033[95m  NOT RUNNING SOLVERS \033[0m"
+   write(*,*) "--------------------------"
+   write(*,*) "--------------------------"
+
+    select case (solver)
+    case(1)
+      slv=NLOPT_LN_NELDERMEAD
+    case(2)
+      slv=NLOPT_GN_CRS2_LM
+    case(3)
+      slv=NLOPT_LN_SBPLX
+    case(4)
+      slv=NLOPT_LD_MMA
+
+    case(5)
+      slv=NLOPT_GN_DIRECT_L_RAND
+    case(6)
+      slv=NLOPT_LN_COBYLA
+    case(7)
+      slv=NLOPT_GN_ESCH
+    case default
+      slv=-100
+   end select
+   num_threads= omp_get_max_threads()
+
+
+
+   !initialize
+   a1=1.0
+   a2=0.5
+   a3=0.8; !a1/a3>1
+   a4=-a2 !a4**2-4*a3*a5<0
+   a5=1.0
+   x=[a1,a2,a3,a4,a5]
+  
+
+   check=check_conditions(a1, a2, a3, a4, a5) 
+
+   me=0.0
+   va=0.007**2;
+   sk=-1.0
+   ku=0.001;
+   fdata=[me,va,sk,ku]
+  opt=0
+   print*,"NUMBER OF THREADS USED", num_threads-1
+call omp_set_num_threads(num_threads-1)
+call nlo_create(opt,slv, size_x)
+      call nlo_get_algorithm(ires,opt);
+      print*, "Using algorithm  ==> ", ires
+
+
+      ! call nlo_get_lower_bounds(ires, opt, lb)
+     
+      lb = -10.0
+      call nlo_set_lower_bounds(ires, opt, lb)
+      call nlo_set_upper_bounds(ires, opt, -lb)
+     
+      call nlo_set_min_objective(ires, opt, min_resid,fdata)
+      call nlo_set_xtol_abs(ires, opt, 1.0D-12)
+      call nlo_set_maxeval(ires, opt,-1)
+      call nlo_set_maxtime(ires, opt, -1)
+      call nlo_set_ftol_abs(ires,opt, 1.D-12)
+      call nlo_set_initial_step(ires, opt,1.d-2)
+      call nlo_optimize(ires, opt, x, minf)
+      call nlo_get_numevals(nevals, opt)
+
+      call nlo_destroy(opt);
+
+
+      write(*,'(A20,E10.3)') ' \033[95m Residual \033[0m', minf
+      write(*,'(A20,5f20.15)') ' \033[95m @Kappa \033[0m', x
+      if(ires<0) then
+         print*, 'FAILED TO FIND OPTIMAL kappa'
+      endif
+
+
+
+   
+end program main_pdf
+
+
+

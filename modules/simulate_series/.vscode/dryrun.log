@@ -1,0 +1,18 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/simulate_series'
+ifort -g -O0 -recursive -r8 -free  -debug extended  -axCORE-AVX2 -fp-model precise   -o test_simulate.out ../my_kinds_mod.f90 \
+../mymoments.f90  \
+../ansi_colors_mod.f90 \
+../my_I_O.f90  \
+../fortran-csv-module/src/csv_kinds.f90 \
+../fortran-csv-module/src/csv_parameters.f90 \
+../fortran-csv-module/src/csv_utilities.f90 \
+../fortran-csv-module/src/csv_module.F90 \
+../read_csv_mod.f90 \
+../../pyplot-fortran/src/pyplot_module.F90 \
+../gnufor2/gnufor2.f90 \
+ ../toolbox.f90 \
+simulate_series_mod.f90 \
+markov_process_mod.f90 -z muldefs -L/opt/intel/oneapi/mkl/latest/lib/intel64/ -Bstatic -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -Wl,--end-group -liomp5 -Bdynamic -Xlinker -rpath -Xlinker /opt/intel/oneapi/mkl/latest/lib/intel64/ 
+make: Leaving directory '/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/simulate_series'
+ 

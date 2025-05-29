@@ -1,0 +1,94 @@
+
+ SUBROUTINE solve_lapack_c(Ain,LDAin,nin,Bin,nbin,Xout)
+
+implicit none
+
+! input/output of main subroutine
+integer :: LDAin,nin,nbin
+complex(kind=8) :: Ain(LDAin,nin),Bin(LDAin,nbin)
+
+complex(kind=8):: Xout(nin,nbin)
+! inputs of the factorization
+! character :: UPLO
+integer :: N,LDA,INFO
+integer, dimension(Nin) :: IPIV
+complex(kind=8) :: A(LDAin,Nin),B(LDAin,nbin)
+! double precision, allocatable, dimension(:) :: WORK
+integer :: error
+! external zsytrf,dsytrs
+
+N=nin
+LDA=LDAin
+A=Ain;
+B=Bin;
+
+Xout=0.0;
+! UPLO='U';
+INFO=0;
+! allocate(work(1),stat=error)
+! work(1)=1;
+! Lwork=-1;
+
+! factorization
+      call ZGETRF( LDA, N, A, LDA, IPIV, INFO )
+! Lwork=aint(work(1));
+! deallocate(work)
+! allocate(work(Lwork),stat=error)
+
+!  call DSYTRF( UPLO, N, A, LDA, IPIV, WORK, LWORK, INFO )
+
+! deallocate(work)
+! solution
+
+! I used to use this before using Matlab
+! call ZGETRS( 'N', N, nbin, A, LDA, IPIV, B, LDA, INFO )
+
+
+!!!! call DSYTRS( UPLO, N, nbin, A, LDA, IPIV, B, LDA, INFO )
+
+
+! the following is used by Matlab
+!  Arguments
+!  =========
+!
+!  N       (input) INTEGER
+!          The number of linear equations, i.e., the order of the
+!          matrix A.  N >= 0.
+!
+!  NRHS    (input) INTEGER
+!          The number of right hand sides, i.e., the number of columns
+!          of the matrix B.  NRHS >= 0.
+!
+!  A       (input/output) COMPLEX*16 array, dimension (LDA,N)
+!          On entry, the N-by-N coefficient matrix A.
+!          On exit, the factors L and U from the factorization
+!          A = P!L!U; the unit diagonal elements of L are not stored.
+!
+!  LDA     (input) INTEGER
+!          The leading dimension of the array A.  LDA >= max(1,N).
+!
+!  IPIV    (output) INTEGER array, dimension (N)
+!          The pivot indices that define the permutation matrix P;
+!          row i of the matrix was interchanged with row IPIV(i).
+!
+!  B       (input/output) COMPLEX!16 array, dimension (LDB,NRHS)
+!          On entry, the N-by-NRHS matrix of right hand side matrix B.
+!          On exit, if INFO = 0, the N-by-NRHS solution matrix X.
+!
+!  LDB     (input) INTEGER
+!          The leading dimension of the array B.  LDB >= max(1,N).
+!
+!  INFO    (output) INTEGER
+!          = 0:  successful exit
+!          < 0:  if INFO = -i, the i-th argument had an illegal value
+!          > 0:  if INFO = i, U(i,i) is exactly zero.  The factorization
+!                has been completed, but the factor U is exactly
+!                singular, so the solution could not be computed.
+!
+!  =====================================================================
+
+call ZGESV( N, nbin, A, LDA, IPIV, B, N, INFO )
+
+Xout=B;
+
+end subroutine

@@ -1,0 +1,17 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/mylib/vectorfun.f90"
+module vectorfun
+  implicit none
+contains
+  function length(v)
+! compute the euclidian length of a vector
+    real    :: length, v(:), s
+    integer :: n, i
+    n = size(v)
+    s = 0.
+    do i=1,n
+      s = s + v(i)**2
+    end do
+    length=sqrt(s)
+  end function
+end module
+

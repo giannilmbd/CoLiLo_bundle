@@ -1,0 +1,1 @@
+/opt/intel/oneapi/compiler/2025.1/bin/ifx -O3 CMakeFiles/stack_size_test_oo.dir/test/stack_size_test_oo.f90.o -o stack_size_test_oo  lib/libbspline-fortran.a 

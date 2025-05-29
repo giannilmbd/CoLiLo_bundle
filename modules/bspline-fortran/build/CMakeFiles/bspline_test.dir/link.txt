@@ -1,0 +1,1 @@
+/opt/intel/oneapi/compiler/2025.1/bin/ifx -O3 CMakeFiles/bspline_test.dir/test/bspline_test.f90.o -o bspline_test  lib/libbspline-fortran.a 

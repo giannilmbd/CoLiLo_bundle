@@ -1,0 +1,13 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Tue Apr 18 20:44:15 2023
+        ! This source file is for reference only and may not completely
+        ! represent the generated interface used by the compiler.
+        MODULE IMTQLX__genmod
+          INTERFACE 
+            RECURSIVE SUBROUTINE IMTQLX(N,D,E,Z)
+              INTEGER(KIND=4) :: N
+              REAL(KIND=8) :: D(N)
+              REAL(KIND=8) :: E(N)
+              REAL(KIND=8) :: Z(N)
+            END SUBROUTINE IMTQLX
+          END INTERFACE 
+        END MODULE IMTQLX__genmod

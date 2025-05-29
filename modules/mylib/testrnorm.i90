@@ -1,0 +1,12 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/mylib/testrnorm.f90"
+program testrnorm
+
+implicit none
+
+double precision :: g
+double precision, external :: rnorm
+
+g=rnorm()
+
+write(*,*) g
+end program

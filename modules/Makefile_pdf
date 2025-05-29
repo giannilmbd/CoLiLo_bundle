@@ -1,0 +1,15 @@
+
+FC=ifort #gfortran # -heap-arrays 5000000: heap-arrays moves arrays from stack to heap in principle helping with large arrays: Any arrays known at compile-time to be larger than size are allocated on the heap instead of the stack. (never worked)
+FLIB= -recursive -xHost -fp-model source -assume bscc -free -qopenmp -fPIC 	
+#FLIB=-frecursive -fopenmp -ffree-line-length-none -fcheck=all -Wall
+FCO=-g0#-O3 # 
+LIBS= -llapack -lblas -I/usr/local/include -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib64/ -lnlopt -I/usr/include/mkl -I/usr/lib/R/site-library/nloptr/include/#/usr/local/lib/libfortran_stdlib.a -I/usr/local/include/fortran_stdlib/GNU-10.3.0
+#
+
+pdf.out: main_pdf.f90
+	$(FC) $(FCO) \
+	  probability_distribution_mod.f90 main_pdf.f90 $(FLIB) $(LIBS) -I/usr/local/include/ -L/usr/lib/x86_64-linux-gnu  \
+	 -L/usr/lib/x86_64-linux-gnu/ -L/usr/lib/x86_64-linux-gnu/lapack/  -o pdf.out
+
+clean:
+	rm *.o *.mod	pdf.out

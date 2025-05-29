@@ -1,0 +1,26 @@
+module consumption1_autarky_module
+    use my_toolbox
+    use globals
+    use my_kinds_mod
+
+    implicit none
+
+contains
+
+!     function consumption1_autarky() result(c1a)
+! ! compute average consumption in autarky so to compute PCU
+
+!         integer :: i1, i2, i3
+!         real(kind=wp) :: c1a
+!         real(kind=wp) :: Cons_array(TT)
+! !$omp PARALLEL  default(shared)
+! !$omp DO collapse(1)
+!         do i1 = 1, TT
+!             Cons_array(i1) = C1v_aut(totindex1(i1), totindex2(i1))
+!         end do
+! !$omp END PARALLEL
+
+!         c1a = sum(Cons_array, dim=1)/TT
+
+!     end function
+end module

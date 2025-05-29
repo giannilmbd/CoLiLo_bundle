@@ -1,0 +1,12 @@
+        !COMPILER-GENERATED INTERFACE MODULE: Tue Apr 18 20:44:15 2023
+        ! This source file is for reference only and may not completely
+        ! represent the generated interface used by the compiler.
+        MODULE W_POLYNOMIAL_VALUE__genmod
+          INTERFACE 
+            RECURSIVE FUNCTION W_POLYNOMIAL_VALUE(N,X)
+              INTEGER(KIND=4) :: N
+              REAL(KIND=8) :: X
+              REAL(KIND=8) :: W_POLYNOMIAL_VALUE
+            END FUNCTION W_POLYNOMIAL_VALUE
+          END INTERFACE 
+        END MODULE W_POLYNOMIAL_VALUE__genmod

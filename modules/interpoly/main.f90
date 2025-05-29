@@ -1,0 +1,57 @@
+! main.f90
+program main
+    use multivariate_interpolation
+    implicit none
+
+    real, allocatable :: x(:), y(:), z(:), f(:,:,:), a(:,:,:)
+    integer :: n_x, n_y, n_z, i, j, k, order
+    real :: interp_error, f_interp
+
+    ! Define the grid points for each variable (x, y, z) and the function values at those points
+    x = [0.0, 1.0, 2.0, 3.0, 4.0]
+    y = [0.0, 1.0, 2.0, 3.0, 4.0]
+    z = [0.0, 1.0, 2.0, 3.0, 4.0]
+
+    n_x = size(x)
+    n_y = size(y)
+    n_z = size(z)
+    order = 2
+
+    allocate(f(n_x, n_y, n_z))
+    allocate(a(n_x, n_y, n_z))
+
+    ! Define the function values at the grid points
+    do i = 1, n_x
+        do j = 1, n_y
+            do k = 1, n_z
+                f(i, j, k) = (x(i)**4 - 2.0 * y(j)**3 + z(k)**2) * (x(i) + y(j) + z(k))
+            end do
+        end do
+    end do
+
+    ! Compute the coefficients
+    do i = 1, n_x
+        do j = 1, n_y
+            call polyfit(z, f(i, j, :), order, a(i, j, :))
+        end do
+    end do
+
+    ! Calculate the interpolation error
+    interp_error = 0.0
+    do i = 1, n_x
+        do j = 1, n_y
+            do k = 1, n_z
+                f_interp = sum(a(i, j, :) * (/[0.0, 1.0, 2.0]/) * z(k))
+                interp_error = interp_error + abs(f(i, j, k) - f_interp)
+            end do
+        end do
+    end do
+    interp_error = interp_error / (n_x * n_y * n_z)
+
+    ! Print the coefficients and interpolation error
+    print *, "Coefficients:"
+    print *, a
+    print *, "Interpolation error:"
+    print *, interp_error
+
+end program main

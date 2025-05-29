@@ -1,0 +1,377 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.3
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Mon Apr 28 20:27:53 2025
+
+# Variables
+
+# environment
+GDK_BACKEND = x11
+# environment
+LC_ALL = C
+# environment
+LAMMPS_POTENTIALS = /usr/share/lammps/potentials
+# environment
+APPIMAGE = /home/gianni/Dropbox/CursorAppImage/Cursor-0.49.6-x86_64.AppImage
+# environment
+CMAKE_PREFIX_PATH = /opt/intel/oneapi/tbb/2022.1/env/..:/opt/intel/oneapi/pti/0.11/lib/cmake/pti:/opt/intel/oneapi/mkl/2025.1/lib/cmake:/opt/intel/oneapi/ipp/2022.1/lib/cmake/ipp:/opt/intel/oneapi/dpl/2022.8/lib/cmake/oneDPL:/opt/intel/oneapi/dnnl/2025.1/lib/cmake:/opt/intel/oneapi/dal/2025.4:/opt/intel/oneapi/compiler/2025.1:/opt/intel/oneapi/ccl/2021.15/lib/cmake/oneCCL
+# environment
+CCL_ROOT = /opt/intel/oneapi/ccl/2021.15
+# environment
+QT_PLUGIN_PATH = /tmp/.mount_CursorMz2ZDk/usr/lib/qt4/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib/i386-linux-gnu/qt4/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib/x86_64-linux-gnu/qt4/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib/aarch64-linux-gnu/qt4/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib32/qt4/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib64/qt4/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib/qt5/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib/i386-linux-gnu/qt5/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib/x86_64-linux-gnu/qt5/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib/aarch64-linux-gnu/qt5/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib32/qt5/plugins/:/tmp/.mount_CursorMz2ZDk/usr/lib64/qt5/plugins/:
+# environment
+VSCODE_CRASH_REPORTER_PROCESS_TYPE = extensionHost
+# environment
+VSCODE_CWD = /home/gianni/Dropbox/CursorAppImage
+# environment
+CMPLR_ROOT = /opt/intel/oneapi/compiler/2025.1
+# environment
+WINDOWPATH = 2
+# environment
+GDM_LANG = en_US.UTF-8
+# default
+MAKE_COMMAND := make
+# environment
+GTK3_MODULES = xapp-gtk3-module
+# environment
+QT_ACCESSIBILITY = 1
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+VTUNE_PROFILER_2025_DIR = /opt/intel/oneapi/vtune/2025.1
+# environment
+TCM_ROOT = /opt/intel/oneapi/tcm/1.3
+# environment
+MSI2LMP_LIBRARY = /usr/share/lammps/frc_files
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+XDG_DATA_DIRS = /tmp/.mount_CursorMz2ZDk/usr/share/:/usr/local/share:/usr/share:/usr/share/gnome:/home/gianni/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+DAL_MINOR_BINARY = 0
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_CODE_CACHE_PATH = /home/gianni/.config/Cursor/CachedData/0781e811de386a0c5bcb07ceb259df8ff8246a50
+# environment
+OWD = /home/gianni/Dropbox/CursorAppImage
+# environment
+LANG = C
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# default
+.LOADED := 
+# default
+.INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
+# makefile
+MAKEFLAGS = pqrR
+# environment
+PKG_CONFIG_PATH = /opt/intel/oneapi/vtune/2025.1/include/pkgconfig/lib64:/opt/intel/oneapi/tbb/2022.1/env/../lib/pkgconfig:/opt/intel/oneapi/mpi/2021.15/lib/pkgconfig:/opt/intel/oneapi/mkl/2025.1/lib/pkgconfig:/opt/intel/oneapi/ippcp/2025.1/lib/pkgconfig:/opt/intel/oneapi/dpl/2022.8/lib/pkgconfig:/opt/intel/oneapi/dnnl/2025.1/lib/pkgconfig:/opt/intel/oneapi/dal/2025.4/lib/pkgconfig:/opt/intel/oneapi/compiler/2025.1/lib/pkgconfig:/opt/intel/oneapi/ccl/2021.15/lib/pkgconfig/:/opt/intel/oneapi/advisor/2025.1/include/pkgconfig/lib64:
+# environment
+DPL_ROOT = /opt/intel/oneapi/dpl/2022.8
+# environment
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=76e0d8caf6ea78b9483377d46807576b
+# makefile
+CURDIR := /home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/models/CoLiLoCodes4Circulation/modules
+# environment
+ADVISOR_2025_DIR = /opt/intel/oneapi/advisor/2025.1
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# default
+.SHELLFLAGS := -c
+# environment
+UMF_ROOT = /opt/intel/oneapi/umf/0.10
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+XDG_SESSION_DESKTOP = gnome
+# makefile
+MAKEFILE_LIST := 
+# environment
+CONDA_SHLVL = 0
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_PID = 1669257
+# environment
+XDG_SESSION_TYPE = x11
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+CONDA_PYTHON_EXE = /home/gianni/anaconda3/bin/python
+# environment
+SESSION_MANAGER = local/debian:@/tmp/.ICE-unix/2599,unix/debian:/tmp/.ICE-unix/2599
+# automatic
+*F = $(notdir $*)
+# environment
+MANPATH = /opt/intel/oneapi/mpi/2021.15/share/man:/opt/intel/oneapi/debugger/2025.1/share/man:/opt/intel/oneapi/compiler/2025.1/share/man:
+# environment
+CHROME_DESKTOP = cursor.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=76e0d8caf6ea78b9483377d46807576b
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+FI_PROVIDER_PATH = /opt/intel/oneapi/mpi/2021.15/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric
+# environment
+VSCODE_NLS_CONFIG = {"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/tmp/.mount_CursorMz2ZDk/usr/share/cursor/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}
+# environment
+CCL_CONFIGURATION = cpu_gpu_dpcpp
+# environment
+ONEAPI_ROOT = /opt/intel/oneapi
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# environment
+INFOPATH = /opt/intel/oneapi/debugger/2025.1/share/info
+# makefile
+SHELL = /bin/sh
+# environment
+IPPCP_TARGET_ARCH = intel64
+# environment
+CLASSPATH = /opt/intel/oneapi/mpi/2021.15/share/java/mpi.jar
+# default
+MAKECMDGOALS := all
+# environment
+XMODIFIERS = @im=ibus
+# environment
+LD_LIBRARY_PATH = /opt/intel/oneapi/tcm/1.3/lib:/opt/intel/oneapi/umf/0.10/lib:/opt/intel/oneapi/tbb/2022.1/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/pti/0.11/lib:/opt/intel/oneapi/mpi/2021.15/opt/mpi/libfabric/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/mkl/2025.1/lib:/opt/intel/oneapi/ippcp/2025.1/lib/:/opt/intel/oneapi/ipp/2022.1/lib:/opt/intel/oneapi/dnnl/2025.1/lib:/opt/intel/oneapi/debugger/2025.1/opt/debugger/lib:/opt/intel/oneapi/dal/2025.4/lib:/opt/intel/oneapi/compiler/2025.1/opt/compiler/lib:/opt/intel/oneapi/compiler/2025.1/lib:/opt/intel/oneapi/ccl/2021.15/lib/:/tmp/.mount_CursorMz2ZDk/usr/lib/:/tmp/.mount_CursorMz2ZDk/usr/lib32/:/tmp/.mount_CursorMz2ZDk/usr/lib64/:/tmp/.mount_CursorMz2ZDk/lib/:/tmp/.mount_CursorMz2ZDk/lib/i386-linux-gnu/:/tmp/.mount_CursorMz2ZDk/lib/x86_64-linux-gnu/:/tmp/.mount_CursorMz2ZDk/lib/aarch64-linux-gnu/:/tmp/.mount_CursorMz2ZDk/lib32/:/tmp/.mount_CursorMz2ZDk/lib64/::/usr/local/lib64
+# environment
+DALROOT = /opt/intel/oneapi/dal/2025.4
+# environment
+SHLVL = 0
+# environment
+MAKELEVEL := 0
+# environment
+APPDIR = /tmp/.mount_CursorMz2ZDk
+# environment
+IPPCRYPTOROOT = /opt/intel/oneapi/ippcp/2025.1
+# environment
+NLSPATH = /opt/intel/oneapi/compiler/2025.1/lib/compiler/locale/%l_%t/%N
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = /home/gianni/.local/bin:/home/gianni/anaconda3/condabin:/opt/intel/oneapi/vtune/2025.1/bin64:/opt/intel/oneapi/mpi/2021.15/bin:/opt/intel/oneapi/mkl/2025.1/bin:/opt/intel/oneapi/dpcpp-ct/2025.1/bin:/opt/intel/oneapi/dev-utilities/2025.1/bin:/opt/intel/oneapi/debugger/2025.1/opt/debugger/bin:/opt/intel/oneapi/compiler/2025.1/bin:/opt/intel/oneapi/advisor/2025.1/bin64:/home/gianni/.local/bin:/home/gianni/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/snap/bin
+# default
+MAKEFILES := 
+# environment
+LANGUAGE = en_US:en
+# automatic
+^F = $(notdir $^)
+# environment
+DIAGUTIL_PATH = /opt/intel/oneapi/dpcpp-ct/2025.1/etc/dpct/sys_check/sys_check.sh:/opt/intel/oneapi/compiler/2025.1/etc/compiler/sys_check/sys_check.sh
+# environment
+OCL_ICD_FILENAMES = /opt/intel/oneapi/compiler/2025.1/lib/libintelocl.so
+# environment
+I_MPI_ROOT = /opt/intel/oneapi/mpi/2021.15
+# environment
+INVOCATION_ID = ade80806a2ac4748904dd2d486718905
+# environment
+IPP_TARGET_ARCH = intel64
+# environment
+USERNAME = gianni
+# environment
+ARGV0 = /home/gianni/Dropbox/CursorAppImage/Cursor-0.49.6-x86_64.AppImage
+# environment
+VTUNE_PROFILER_DIR = /opt/intel/oneapi/vtune/2025.1
+# automatic
+?F = $(notdir $?)
+# environment
+GTK_IM_MODULE = ibus
+# environment
+XDG_CURRENT_DESKTOP = GNOME
+# environment
+CURSOR_TRACE_ID = 052bd01c07fe4d8097e6c52ebfa341ac
+# environment
+MKLROOT = /opt/intel/oneapi/mkl/2025.1
+# automatic
++F = $(notdir $+)
+# environment
+DESKTOP_SESSION = gnome
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = GNOME
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+CPATH = /opt/intel/oneapi/umf/0.10/include:/opt/intel/oneapi/tbb/2022.1/env/../include:/opt/intel/oneapi/pti/0.11/include:/opt/intel/oneapi/mpi/2021.15/include:/opt/intel/oneapi/mkl/2025.1/include:/opt/intel/oneapi/ippcp/2025.1/include:/opt/intel/oneapi/ipp/2022.1/include:/opt/intel/oneapi/dpl/2022.8/include:/opt/intel/oneapi/dpcpp-ct/2025.1/include:/opt/intel/oneapi/dnnl/2025.1/include:/opt/intel/oneapi/dev-utilities/2025.1/include:/opt/intel/oneapi/dal/2025.4/include:/opt/intel/oneapi/dal/2025.4/include/dal:/opt/intel/oneapi/ccl/2021.15/include
+# environment
+LOGNAME = gianni
+# makefile
+.DEFAULT_GOAL := 
+# environment
+SYSTEMD_EXEC_PID = 2599
+# environment
+DISPLAY = :1
+# environment
+USER = gianni
+# environment
+GTK_MODULES = gail:atk-bridge
+# environment
+LIBRARY_PATH = /opt/intel/oneapi/tcm/1.3/lib:/opt/intel/oneapi/umf/0.10/lib:/opt/intel/oneapi/tbb/2022.1/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/pti/0.11/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/mkl/2025.1/lib:/opt/intel/oneapi/ippcp/2025.1/lib/:/opt/intel/oneapi/ipp/2022.1/lib:/opt/intel/oneapi/dnnl/2025.1/lib:/opt/intel/oneapi/dal/2025.4/lib:/opt/intel/oneapi/compiler/2025.1/lib:/opt/intel/oneapi/ccl/2021.15/lib/
+# default
+MAKE_VERSION := 4.3
+# environment
+MANAGERPID = 2328
+# environment
+Pti_DIR = /opt/intel/oneapi/pti/0.11/lib/cmake/pti
+# environment
+DBUS_STARTER_BUS_TYPE = session
+# environment
+GIO_LAUNCHED_DESKTOP_FILE_PID = 1669257
+# environment
+PYTHONPATH = /opt/intel/oneapi/advisor/2025.1/pythonapi
+# environment
+SSH_AGENT_PID = 2553
+# environment
+_ = /tmp/.mount_CursorMz2ZDk/usr/share/cursor/cursor
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+APM = /opt/intel/oneapi/advisor/2025.1/perfmodels
+# environment
+VSCODE_PROCESS_TITLE = extension-host [1-2]
+# environment
+JOURNAL_STREAM = 8:31143
+# environment
+XDG_SESSION_CLASS = user
+# environment
+GDB_INFO = /opt/intel/oneapi/debugger/2025.1/share/info/
+# environment
+HOME = /home/gianni
+# environment
+QT_IM_MODULE = ibus
+# environment
+TBBROOT = /opt/intel/oneapi/tbb/2022.1/env/..
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-36d8075e-0.49-main.sock
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+GSETTINGS_SCHEMA_DIR = /tmp/.mount_CursorMz2ZDk/usr/share/glib-2.0/schemas/:
+# environment
+MATHEMATICA_HOME = /usr/share/Wolfram/Documentation/13.3/en-us
+# environment
+INTEL_PYTHONHOME = /opt/intel/oneapi/debugger/2025.1/opt/debugger
+ 
+make: *** No rule to make target 'all'.  Stop.
+
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+SETVARS_COMPLETED = 1
+# environment
+IPPROOT = /opt/intel/oneapi/ipp/2022.1
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
+# environment
+DNNLROOT = /opt/intel/oneapi/dnnl/2025.1
+# environment
+QTWEBENGINE_DICTIONARIES_PATH = /usr/share/hunspell-bdic/
+# environment
+PERLLIB = /tmp/.mount_CursorMz2ZDk/usr/share/perl5/:/tmp/.mount_CursorMz2ZDk/usr/lib/perl5/:
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+DAL_MAJOR_BINARY = 3
+# environment
+VSCODE_ESM_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+CONDA_EXE = /home/gianni/anaconda3/bin/conda
+# environment
+GDMSESSION = gnome
+# variable set hash-table stats:
+# Load=146/1024=14%, Rehash=0, Collisions=10/173=6%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 2053, inode 14837285): 85 files, no impossibilities.
+
+# 85 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+GNUmakefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# files hash-table stats:
+# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 93 / storage = 1752 B / avg = 18 B
+# current buf: size = 8162 B / used = 1752 B / count = 93 / avg = 18 B
+
+# strcache performance: lookups = 96 / hit rate = 3%
+# hash-table stats:
+# Load=93/8192=1%, Rehash=0, Collisions=0/96=0%
+# Finished Make data base on Mon Apr 28 20:27:53 2025
+
+ 

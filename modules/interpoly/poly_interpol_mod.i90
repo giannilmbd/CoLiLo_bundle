@@ -1,0 +1,86 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/interpoly/poly_interpol_mod.f90"
+module multivariate_interpolation
+    implicit none
+    contains
+
+    function interpolate_1d(x, y, xi) result(yi)
+        real, intent(in) :: x(:), y(:), xi
+        real :: yi
+        integer :: i, j, n
+        real, allocatable :: L(:)
+    
+        n = size(x)
+        allocate(L(n))
+    
+        yi = 0.0
+        do i = 1, n
+            L = 1.0
+            do j = 1, n
+                if (j /= i) then
+                    L(j) = L(j) * (xi - x(j)) / (x(i) - x(j))
+                else
+                    L(j) = 1.0
+                end if
+            end do
+            yi = yi + y(i) * product(L)
+        end do
+    end function interpolate_1d
+    
+    subroutine polyfit(x, y, degree, coef)
+        real, intent(in) :: x(:), y(:)
+        integer, intent(in) :: degree
+        real, intent(out) :: coef(:)
+        integer :: n, i, j, k
+        real :: s, t
+    
+        n = size(x)
+    
+        do k = 0, degree
+            s = 0.0
+            t = 0.0
+            do i = 1, n
+                s = s + x(i)**k * y(i)
+                t = t + x(i)**(2*k)
+            end do
+            coef(k+1) = s / t
+        end do
+    end subroutine polyfit
+    
+    subroutine compute_multivariate_coefficients(x, y, z, f, a)
+        real, intent(in) :: x(:), y(:), z(:), f(size(x, 1), size(y, 1), size(z, 1))
+        real, intent(out) :: a(size(x, 1), size(y, 1), size(z, 1), 3)
+        integer :: n_x, n_y, n_z, i, j, k
+    
+        n_x = size(x)
+        n_y = size(y)
+        n_z = size(z)
+    
+        do i = 1, n_x
+            do j = 1, n_y
+                do k = 1, n_z
+                    a(i, j, k, 1) = f(i, j, k) / (x(i)**(i - 1) * y(j)**(j - 1) * z(k)**(k - 1))
+                end do
+            end do
+        end do
+    end subroutine compute_multivariate_coefficients
+    
+
+    function linspace(start, stop, num) result(res)
+        real, intent(in) :: start, stop
+        integer, intent(in) :: num
+        real, dimension(num) :: res
+        integer :: i
+
+        if (num > 1) then
+            do i = 1, num
+                res(i) = start + real(i - 1) * (stop - start) / real(num - 1)
+            end do
+        else
+            res(1) = start
+        end if
+
+    end function linspace
+
+end module multivariate_interpolation
+
+

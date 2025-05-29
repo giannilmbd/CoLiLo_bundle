@@ -1,0 +1,13 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "source /opt/intel/oneapi/setvars.sh --force; export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/inspector/2023.0.0/lib64; make clean;make -j1",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            }
+        }
+    ]
+}

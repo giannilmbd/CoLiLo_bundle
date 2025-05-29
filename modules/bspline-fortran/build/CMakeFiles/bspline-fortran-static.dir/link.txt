@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/libbspline-fortran.a "CMakeFiles/bspline-fortran-static.dir/src/bspline_blas_module.F90.o" "CMakeFiles/bspline-fortran-static.dir/src/bspline_defc_module.F90.o" "CMakeFiles/bspline-fortran-static.dir/src/bspline_kinds_module.F90.o" "CMakeFiles/bspline-fortran-static.dir/src/bspline_module.f90.o" "CMakeFiles/bspline-fortran-static.dir/src/bspline_oo_module.f90.o" "CMakeFiles/bspline-fortran-static.dir/src/bspline_sub_module.f90.o"
+/usr/bin/ranlib lib/libbspline-fortran.a

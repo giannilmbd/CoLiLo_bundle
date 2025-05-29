@@ -1,0 +1,14 @@
+include ../mylib/make.inc
+# -L/opt/matlab7/bin/glnx86  -lmx -lmex -lmat -lmwservices -lut
+#all: test1
+
+matrixmul.mod: ../mylib/matrixmul.f90
+	$(FC) -c  ../mylib/matrixmul.f90
+	
+mexf90.mod:../mylib/mexf90.f90
+# 	ifort -c  ../mylib/mexf90.f90
+	$(FC) -c  ../mylib/mexf90.f90
+	
+clean:
+	 rm *.o *.mexglx *.mod
+	 

@@ -1,0 +1,34 @@
+subroutine mat_gennorm(av_d,sd_d,periods,sz,sz2,sz3,res)
+
+implicit none
+integer,intent(in) :: sz,sz2,sz3
+double precision :: epsilon_
+double precision , intent(in) :: periods(sz3,1)
+double precision, intent(out) :: res(sz3,1)
+double precision,intent(in) :: av_d(1,1),sd_d(1,1)
+ real:: av,sd
+real,External :: gennor
+integer ::  ISEED1,ISEED2,jj
+real :: time0,time1
+ISEED1=1967
+ISEED2=2007
+av=real(av_d(1,1));
+sd=real(sd_d(1,1));
+call SETALL(ISEED1,ISEED2)
+! ! av=3.;sd=1.;
+! open(10,file='data.dat');
+! write(10,*) 
+! close(10);
+! open(10,file='data.dat',position='append');
+! call cpu_time(time0)
+do jj=1,sz3
+epsilon_=gennor(av,sd)
+res(jj,1)=epsilon_;
+! write(10,*) dble(epsilon_)
+enddo
+! close(10);
+! call cpu_time(time1)
+
+! print *, 'time elapsed = ', time1-time0
+! write(*,*) epsilon_
+end subroutine

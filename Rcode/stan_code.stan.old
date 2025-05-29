@@ -1,0 +1,73 @@
+data {
+    int<lower=1> nCountries;       // Number of countries
+    int<lower=1> nPeriods;         // Number of time periods
+    matrix[nPeriods, nCountries] yy; // Observed output (time x countries)
+}
+
+parameters {
+    vector[nCountries] d;          // Country-specific intercepts
+    simplex[2] p1;                 // Transition probabilities for state 1
+    simplex[3] p2;                 // Transition probabilities for state 2
+    simplex[2] p3;                 // Transition probabilities for state 3
+    simplex[3] pi0;                // Initial state probabilities
+    real<lower=0.0001> sigma[nCountries]; // Country-specific standard deviations
+    real<lower=0.0, upper=0.99> rho[nCountries]; // AR(1) coefficients
+    ordered[3] mu[nCountries];     // State-specific means for each country
+    // vector[3] mu[nCountries];
+}
+
+transformed parameters {
+    matrix[3, 3] gamma= rep_matrix(0, 3, 3);;            // Transition matrix eventually assume moving from disaster to boom directly (and v.v.) is not possible
+    matrix[3, nPeriods] log_omega[nCountries]; // Log-likelihood for each country and state
+
+    // Build the global transition matrix
+    gamma[1,1:2 ] = to_row_vector(p1);
+    gamma[2,1:3 ] = to_row_vector(p2);
+    gamma[3, 2:3] = to_row_vector(p3);
+    // print("Gamma " ,gamma);
+    // Compute the log-likelihood for each country and state
+for (i in 1:nCountries) {
+        for (s in 1:3) {
+          log_omega[i][s, 1] = normal_lpdf(yy[1, i] | d[i] + mu[i, s], sigma[i]);
+          for (n in 2:nPeriods) {
+            // Subsequent periods: Include AR(1) component
+            real mu_state = d[i] + mu[i, s] + rho[i] * yy[n-1, i];
+            log_omega[i][s, n] = normal_lpdf(yy[n, i] | mu_state, sigma[i]);
+        }
+    }
+}
+    
+}
+
+model {
+    // Priors
+    for (i in 1:nCountries) {
+        mu[i, 1] ~ normal(-0.3, 0.5);// uniform(-1, -0.05);  // State 1: Low values
+        mu[i, 2] ~ normal(0.0, 0.5);//uniform(-0.05, 0.05); // State 2: Middle values
+        mu[i, 3] ~ normal(0.3, 0.5);//uniform(0.05, 1);   // State 3: High values
+
+        // mu[i, 1] ~ uniform(-1, -0.05);  // State 1: Low values
+        // mu[i, 2] ~ uniform(-0.05, 0.05); // State 2: Middle values
+        // mu[i, 3] ~ uniform(0.05, 1);   // State 3: High values
+        d[i] ~ normal(0, 2);           // Intercepts
+        sigma[i] ~ lognormal(0, 0.5);//normal(0, 2);       // Standard deviations
+        rho[i] ~ beta(5, 2);           // AR(1) coefficients
+    } 
+
+      p1 ~ dirichlet(rep_vector(2, 2)); // Slightly favors balanced transitions
+      p2 ~ dirichlet(rep_vector(2, 3));
+      p3 ~ dirichlet(rep_vector(2, 2));
+      pi0 ~ dirichlet(rep_vector(2, 3)); // Initial state probabilities
+
+    // Use hmm_marginal for efficient marginalization over states
+    // print("pi0 ",pi0);
+    // print("log_omega ",log_omega[1][1,1]);
+    // print("first obs ", yy[1,1]);
+    // print("gamma",gamma);
+    // print("mu_state",d[1] + mu[1, ] + rho[1] * yy[1, 1]);
+    // print("sigma: ", sigma[1]);
+    for (i in 1:nCountries) {
+      
+         target += hmm_marginal(log_omega[i], gamma, pi0);
+    }
+} 

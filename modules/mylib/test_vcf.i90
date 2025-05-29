@@ -1,0 +1,19 @@
+# 1 "/home/gianni/Dropbox/projects/ANNAGIANCARLOGIANNI/CoLiLoGlobal/modules/mylib/test_vcf.f90"
+! the main program can be placed in a separate file and compiled separately
+program test_vcf
+  use vectorfun ! this makes all declarations and definitions of module available
+  implicit none
+  integer :: i,n
+  real    :: r 
+  real, allocatable :: x(:)
+  print *,'n ='
+  read *, n
+  allocate(x(n))
+  do i=1,n
+    print *,'x(',i,') ='
+    read *, x(i)
+  end do
+  r=length(x)
+  print *, 'length =',r
+end program
+

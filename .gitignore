@@ -1,0 +1,8 @@
+# Ignore any nested .git or .github directories recursively
+**/.git/
+**/.gitmodules
+**/.github/
+**/.gitkeep
+**/.gitattributes
+**/.gitignore~  # Backup files
+**/session.log

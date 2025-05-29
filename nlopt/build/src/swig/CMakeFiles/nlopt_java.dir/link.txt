@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -O3 -DNDEBUG -shared  -o libnloptjni.so CMakeFiles/nlopt_java.dir/nloptJAVA_wrap.cxx.o  -Wl,-rpath,::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ../../libnlopt.a -lm 

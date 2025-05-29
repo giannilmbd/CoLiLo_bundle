@@ -1,0 +1,12 @@
+nlopt/Algorithm$SwigNext.class
+nlopt/Algorithm.class
+nlopt/DoubleVector.class
+nlopt/ForcedStopException.class
+nlopt/NLopt.class
+nlopt/NLoptJNI.class
+nlopt/Opt$Func.class
+nlopt/Opt$MFunc.class
+nlopt/Opt.class
+nlopt/Result$SwigNext.class
+nlopt/Result.class
+nlopt/RoundoffLimitedException.class
